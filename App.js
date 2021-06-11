@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Login from './components/login';
+import Login from './components/Login';
 import {Container, Root} from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { useState } from "react";
