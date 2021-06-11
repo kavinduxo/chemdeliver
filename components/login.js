@@ -1,6 +1,6 @@
-import React, {Component, useState} from 'react';
+import React, { useState } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {Container, Content, InputGroup, Input, Item, Button} from 'native-base';
+import {Input, Item, Button} from 'native-base';
 
 function Login ({ login }) {
     const [user, setUser] = useState({
