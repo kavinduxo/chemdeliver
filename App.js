@@ -1,13 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Login from './components/login';
+import {Container, Root} from 'native-base';
+import { NavigationContainer } from '@react-navigation/native';
+import { useState } from "react";
+import { createStackNavigator } from '@react-navigation/stack';
 
 export default function App() {
+  const [profile, setProfile] = useState(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  const signout = () => {
+      setIsUserLoggedIn(false);
+      setProfile(null);
+  };
+
+  const login = async (user) => {
+    const existingUser = {
+      userId: "sadeshS",
+      password: "123456789"
+    }
+    if(user.userId == existingUser.userId && user.password == existingUser.password){
+      setProfile(existingUser);
+      setIsUserLoggedIn(true);
+    }
+  }
+
+  const Stack = createStackNavigator();
+  
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Root>
+      <Container style={styles.container}>
+        {!isUserLoggedIn ? (
+          <Login login={login}/>
+        ):(
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName={"Home"}>
+              <Stack.Screen name="Home" component={Home} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        )}
+      </Container>
+    </Root>
   );
 }
 
