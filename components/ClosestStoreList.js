@@ -1,19 +1,21 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native'
-import ClosestStores from './ClosestStores';
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native'
+import Stores from './Stores';
 
 const ClosestStoreList = () => {
     return (
-        <View style={styles.storeWrapper}>
-            <Text style={styles.sectionTitle}>
-                Closest Stores
-            </Text>
-            <View style={styles.items}>
-                <ClosestStores text={'Store A               * 12km'} />
-                <ClosestStores text={'Store B               * 20km'} />
-                <ClosestStores text={'Store AB              * 45km'} />
+        <ScrollView style={styles.scrollView}>
+            <View style={styles.storeWrapper}>
+                <Text style={styles.sectionTitle}>
+                    Stores Close by
+                </Text>
+                <View style={styles.items}>
+                    <Stores text={'Store A               * 12km'} />
+                    <Stores text={'Store B               * 20km'} />
+                    <Stores text={'Store AB              * 45km'} />
+                </View>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
@@ -28,7 +30,10 @@ const styles = StyleSheet.create({
     },
     items: {
         marginTop: 30,
-    }
+    },
+    scrollView: {
+        marginHorizontal: 20,
+    },
 });
 
 export default ClosestStoreList;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 
-const ClosestStores = (props) => {
+const Stores = (props) => {
     return (
         <View style={styles.item}>
             <View style={styles.itemLeft}>
@@ -49,4 +49,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ClosestStores;
+export default Stores;

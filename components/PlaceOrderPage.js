@@ -2,11 +2,11 @@ import React from 'react'
 import { View, Text, StyleSheet, SafeAreaView, useWindowDimensions } from 'react-native'
 import ClosestStoreList from './ClosestStoreList';
 import OtherStoreList from './OtherStoresList';
-import FavouriteStoreCard from './FavouriteStoreCard';
+import OrderForm from './OrderForm';
 import { TabView, SceneMap } from 'react-native-tab-view';
 
 const FirstRoute = () => (
-    <FavouriteStoreCard />
+    <OrderForm/>
 );
 
 const SecondRoute = () => (
