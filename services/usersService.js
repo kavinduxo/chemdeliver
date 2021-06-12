@@ -19,7 +19,6 @@ export async function createUser(data) {
 export async function getUser(id) {
     try{
         const response = await instance.get('user/' + id);
-        console.log(response);
         return response.data.Item;
     } catch (err) {
         console.log(err);

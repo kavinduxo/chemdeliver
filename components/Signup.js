@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'reac
 import { Input, Item, Button, DatePicker, Picker, Grid, Col, Container } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createUser } from '../services/usersService';
+import BcryptReactNative from 'bcrypt-react-native';
 
 function Signup ({ navigation }) {
     const [user, setUser] = useState({
@@ -12,8 +13,20 @@ function Signup ({ navigation }) {
     const [isPartTwoVisible, setIsPartTwoVisible] = useState(false);
 
     const signup = async () => {
-        if (user?.medicalId && await createUser(user)){
-            navigation.navigate("Login");
+        try{
+            if (user?.medicalId){
+                const salt = await BcryptReactNative.getSalt(10);
+                const hash = await BcryptReactNative.hash(salt, user.password);
+                setUser({
+                    ...user,
+                    password: hash
+                })
+                if (await createUser(user)){
+                    navigation.navigate("Login");
+                }
+            }
+        } catch(err) {
+            console.log(err);
         }
     }
 
@@ -166,7 +179,7 @@ function Signup ({ navigation }) {
                             rounded
                             block
                             style={styles.signupBtn}
-                            onPress={() => {signup()}}
+                            onPress={async() => {await signup()}}
                         >
                             <Text style={styles.nextTxt}>Sign in</Text>
                         </Button>

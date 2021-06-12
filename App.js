@@ -8,6 +8,7 @@ import Signup from './components/Signup';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getUser } from './services/usersService';
 import DrawerNav from './components/DrawerNav';
+import BcryptReactNative from 'bcrypt-react-native';
 
 export default function App() {
   const [profile, setProfile] = useState(null);
@@ -16,12 +17,13 @@ export default function App() {
   const signout = () => {
     setIsUserLoggedIn(false);
     setProfile(null);
+    return false;
   };
 
   const login = async (user) => {
     const existingUser = await getUser(user.userId);
-    console.log(user.userId, existingUser);
-    if (user.userId == existingUser.medicalId && user.password == existingUser.password) {
+    const validPassword = await BcryptReactNative.compareSync(user.password, existingUser.password);
+    if (user.userId == existingUser.medicalId && validPassword) {
       setProfile(existingUser);
       setIsUserLoggedIn(true);
     }
@@ -46,7 +48,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
               <Stack.Screen name="DrawerNav">
-                {props => <DrawerNav {...props} userId={profile.userId} />}
+                {props => <DrawerNav {...props} userId={profile.userId} signout={signout} />}
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
