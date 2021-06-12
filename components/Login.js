@@ -36,7 +36,7 @@ function Login ({ login, navigation }) {
                     rounded
                     block
                     style={styles.loginBtn}
-                    onPress={() => {login(user)}}
+                    onPress={async () => {await login(user)}}
                 >
                     <Text style={styles.login}>Login</Text>
                 </Button>

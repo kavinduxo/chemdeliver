@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Input, Item, Button, DatePicker, Picker, Grid, Col, Container } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { createUser } from '../services/usersService';
 
 function Signup ({ navigation }) {
     const [user, setUser] = useState({
-        fName: '',
-        lName: '',
-        gender: '',
-
         loading: false,
         dob: new Date()
     });
     const [isPartTwoVisible, setIsPartTwoVisible] = useState(false);
 
-    const signup = () => {
-        navigation.navigate("Login")
+    const signup = async () => {
+        if (user?.medicalId && await createUser(user)){
+            navigation.navigate("Login");
+        }
     }
 
     return(
@@ -66,7 +65,7 @@ function Signup ({ navigation }) {
                         </Item>
                         <Item rounded style={styles.input}>
                             <Input style={{paddingLeft: "10%"}}
-                                placeholder="Medical Id (optional)"
+                                placeholder="Medical Id"
                                 placeholderTextColor="#b2b8b5"
                                 value={user.medicalId}
                                 onChangeText={medicalId => setUser({...user, medicalId: medicalId})}        

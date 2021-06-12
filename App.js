@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import History from './components/History';
 import Signup from './components/Signup';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { getUser } from './services/usersService';
 
 export default function App() {
   const [profile, setProfile] = useState(null);
@@ -17,11 +18,9 @@ export default function App() {
   };
 
   const login = async (user) => {
-    const existingUser = {
-      userId: "sadeshS",
-      password: "123456789"
-    }
-    if (user.userId == existingUser.userId && user.password == existingUser.password) {
+    const existingUser = await getUser(user.userId);
+    console.log(user.userId, existingUser);
+    if (user.userId == existingUser.medicalId && user.password == existingUser.password) {
       setProfile(existingUser);
       setIsUserLoggedIn(true);
     }
