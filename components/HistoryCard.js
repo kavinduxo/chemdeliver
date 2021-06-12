@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Alert } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import HistoryCardItem from './HistoryCardItem';
 
 export default function HistoryCard(props) {
@@ -25,18 +25,18 @@ export default function HistoryCard(props) {
             }}
         >
 
-            <View style={{ flexDirection: "row", justifyContent: 'space-between' }} >
+            <View style={{ flexDirection: "row", justifyContent: 'space-between', marginBottom: 10 }} >
                 <Text style={{ fontSize: 18, color: '#66667E' }}>Order {"CPS001"}</Text>
                 <Text style={{ fontSize: 18, color: '#66667E' }}>{props.OrderType}</Text>
             </View>
 
-            <View style={{ flexDirection: "row", justifyContent: 'center' }} >
+            <View style={{ flexDirection: "row", justifyContent: 'center', marginBottom: 5 }} >
                 <Text style={{ fontSize: 12, color: '#153E73' }}>{props.DateTime}, {props.Vendor}</Text>
             </View>
 
             <View>{drugList()}</View>
 
-            <View style={{ flexDirection: "row", justifyContent: 'center' }} >
+            <View style={{ flexDirection: "row", justifyContent: 'center', marginBottom: 10, marginTop: 10 }} >
                 <Text style={{ fontSize: 18, color: '#20D0C4' }}>Price: {"20$"}</Text>
             </View>
 
@@ -48,6 +48,5 @@ export default function HistoryCard(props) {
             />
 
         </View>
-        
     );
 }
