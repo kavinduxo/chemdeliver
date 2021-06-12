@@ -13,23 +13,29 @@ export default function History() {
         }}
         >
 
-            <HistoryCard key="1"
-                OrderType="Delivery"
-                DateTime="14:00, 13/06/2021"
-                Vendor="Chemist Warehouse"
-                Drugs={[
-                    { id: 1, name: "A1", quantity: 5 },
-                    { id: 2, name: "B21", quantity: 2 }
-                ]}
-            />
-            <HistoryCard key="2"
-                OrderType="Delivery"
-                DateTime="14:00, 13/06/2021"
-                Vendor="Chemist Warehouse"
-                Drugs={[
-                    { id: 1, name: "C4", quantity: 1 }
-                ]}
-            />
+            <View style={{ marginBottom: 20 }}>
+                <HistoryCard key="1"
+                    OrderType="Delivery"
+                    DateTime="14:00, 13/06/2021"
+                    Vendor="Chemist Warehouse"
+                    Drugs={[
+                        { id: 1, name: "A1", quantity: 5 },
+                        { id: 2, name: "B21", quantity: 2 }
+                    ]}
+                />
+            </View>
+
+            <View style={{ marginBottom: 20 }}>
+                <HistoryCard key="2"
+                    OrderType="Delivery"
+                    DateTime="14:00, 13/06/2021"
+                    Vendor="Chemist Warehouse"
+                    Drugs={[
+                        { id: 1, name: "C4", quantity: 1 }
+                    ]}
+                />
+            </View>
+
             <HistoryCard key="3"
                 OrderType="Delivery"
                 DateTime="14:00, 13/06/2021"
@@ -40,6 +46,7 @@ export default function History() {
                     { id: 3, name: "P1", quantity: 10 }
                 ]}
             />
+
             <HistoryCard key="4"
                 OrderType="Delivery"
                 DateTime="14:00, 13/06/2021"
@@ -49,6 +56,7 @@ export default function History() {
                     { id: 2, name: "APS1", quantity: 5 }
                 ]}
             />
+            
             <HistoryCard key="5"
                 OrderType="Delivery"
                 DateTime="14:00, 13/06/2021"
