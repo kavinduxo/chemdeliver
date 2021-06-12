@@ -12,8 +12,8 @@ export default function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   const signout = () => {
-      setIsUserLoggedIn(false);
-      setProfile(null);
+    setIsUserLoggedIn(false);
+    setProfile(null);
   };
 
   const login = async (user) => {
@@ -21,14 +21,14 @@ export default function App() {
       userId: "sadeshS",
       password: "123456789"
     }
-    if(user.userId == existingUser.userId && user.password == existingUser.password){
+    if (user.userId == existingUser.userId && user.password == existingUser.password) {
       setProfile(existingUser);
       setIsUserLoggedIn(true);
     }
   }
 
   const Stack = createStackNavigator();
-  
+
   return (
     <SafeAreaProvider>
         {!isUserLoggedIn ? (
