@@ -4,9 +4,10 @@ import ClosestStoreList from './ClosestStoreList';
 import OtherStoreList from './OtherStoresList';
 import OrderForm from './OrderForm';
 import { TabView, SceneMap } from 'react-native-tab-view';
+import NavHeader from './NavHeader';
 
 const FirstRoute = () => (
-    <OrderForm/>
+    <OrderForm />
 );
 
 const SecondRoute = () => (
@@ -17,7 +18,7 @@ const ThirddRoute = () => (
     <OtherStoreList />
 );
 
-const PlaceOrderPage = () => {
+const PlaceOrderPage = ({ navigation }) => {
     const layout = useWindowDimensions();
 
     const [index, setIndex] = React.useState(0);
@@ -35,6 +36,7 @@ const PlaceOrderPage = () => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <NavHeader {...navigation}/>
             <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}

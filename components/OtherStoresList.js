@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Platform, Keyboard } from 'react-native';
-import { View, Text, StyleSheet, SafeAreaView, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native'
 import Stores from './Stores';
 
 const OtherStoreList = () => {
@@ -20,6 +20,9 @@ const OtherStoreList = () => {
                         Other Stores
                     </Text>
                     <View style={styles.items}>
+                        <Stores text={'Store X               * 102km'} />
+                        <Stores text={'Store Y               * 78km'} />
+                        <Stores text={'Store XY              * 203km'} />
                         <Stores text={'Store X               * 102km'} />
                         <Stores text={'Store Y               * 78km'} />
                         <Stores text={'Store XY              * 203km'} />
@@ -46,7 +49,8 @@ const OtherStoreList = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        paddingBottom: '25%'
     },
     scrollView: {
         marginHorizontal: 20,

@@ -1,11 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
-import PlaceOrderPage from './components/PlaceOrderPage';
+import { View, Text, SafeAreaView } from 'react-native';
+import DrawerNav from './components/DrawerNav';
 
 export default function App() {
   return (
-    <PlaceOrderPage/>
+    <SafeAreaView style={styles.safeArea}>
+      <DrawerNav />
+    </SafeAreaView>
   );
 }
 
+const styles = {
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FFFFFF'
+  }
+}
