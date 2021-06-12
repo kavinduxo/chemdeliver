@@ -7,6 +7,7 @@ import History from './components/History';
 import Signup from './components/Signup';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getUser } from './services/usersService';
+import DrawerNav from './components/DrawerNav';
 
 export default function App() {
   const [profile, setProfile] = useState(null);
@@ -43,9 +44,9 @@ export default function App() {
           </NavigationContainer>
         ):(  
           <NavigationContainer>
-            <Stack.Navigator initialRouteName={"History"} screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="History">
-                {props => <History {...props} userId={profile.userId} />}
+            <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="DrawerNav">
+                {props => <DrawerNav {...props} userId={profile.userId} />}
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
