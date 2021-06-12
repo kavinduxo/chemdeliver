@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import {Input, Item, Button} from 'native-base';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-function Login ({ login }) {
+function Login ({ login, navigation }) {
     const [user, setUser] = useState({
         userId: '',
         password: '',
@@ -10,34 +11,38 @@ function Login ({ login }) {
     });
 
     return(
-        <View style={styles.container}>
-            <Text style={styles.loginTxt}>Login</Text>
-            <Text style={styles.loginSubtitleTxt}>Add your details to login</Text>
-            <Item rounded style={styles.input}>
-                <Input style={{textAlign: "center"}}
-                    placeholder="User Id"
-                    value={user.userId}
-                    onChangeText={userId => setUser({...user, userId: userId})}        
-                />
-            </Item>
-            <Item rounded style={styles.input}>
-                <Input style={{textAlign: "center"}}
-                    secureTextEntry
-                    placeholder="Password"
-                    value={user.password}
-                    onChangeText={password => setUser({...user, password: password})}        
-                />
-            </Item>
-            <Button
-                rounded
-                block
-                style={styles.loginBtn}
-                onPress={() => {login(user)}}
-            >
-                <Text style={styles.login}>Login</Text>
-            </Button>
-            <Text style={styles.signup}>Don't have an Account? Sign Up</Text>
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <SafeAreaView style={styles.container}> 
+                <Text style={styles.loginTxt}>Login</Text>
+                <Text style={styles.loginSubtitleTxt}>Add your details to login</Text>
+                <Item rounded style={styles.input}>
+                    <Input style={{textAlign: "center"}}
+                        placeholder="User Id"
+                        placeholderTextColor="#b2b8b5"
+                        value={user.userId}
+                        onChangeText={userId => setUser({...user, userId: userId})}        
+                    />
+                </Item>
+                <Item rounded style={styles.input}>
+                    <Input style={{textAlign: "center"}}
+                        secureTextEntry
+                        placeholder="Password"
+                        placeholderTextColor="#b2b8b5"
+                        value={user.password}
+                        onChangeText={password => setUser({...user, password: password})}        
+                    />
+                </Item>
+                <Button
+                    rounded
+                    block
+                    style={styles.loginBtn}
+                    onPress={() => {login(user)}}
+                >
+                    <Text style={styles.login}>Login</Text>
+                </Button>
+                <Text style={styles.signup}>Don't have an Account? <Text style={styles.signupTxt} onPress={() => {navigation.navigate("Signup")}}>Sign Up</Text></Text>
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -80,6 +85,9 @@ const styles = StyleSheet.create({
     },
     signup: {
         marginTop: "2%"
+    },
+    signupTxt: {
+        color: "#00CBBC",
     }    
 })
 

@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, SafeAreaView } from 'react-native';
 import HistoryCard from './HistoryCard';
 
-export default function History() {
-
+export default function History({userId}) {
+    console.log(userId)
     return (
 
         <ScrollView style={{
