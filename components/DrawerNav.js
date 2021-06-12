@@ -9,6 +9,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { View, Text, Button, SafeAreaView } from 'react-native';
 import OtherStoreList from './OtherStoresList';
 import PlaceOrderPage from './PlaceOrderPage';
+import History from './History';
+import Login from './Login';
 
 function CustomDrawerContent(props) {
     return (
@@ -16,10 +18,6 @@ function CustomDrawerContent(props) {
             <DrawerItemList {...props} />
             <DrawerItem
                 label="Close drawer"
-                onPress={() => props.navigation.closeDrawer()}
-            />
-            <DrawerItem
-                label="Toggle drawer"
                 onPress={() => props.navigation.toggleDrawer()}
             />
         </DrawerContentScrollView>
@@ -28,29 +26,21 @@ function CustomDrawerContent(props) {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer() {
+function MyDrawer({userId}) {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
             <Drawer.Screen name="Home" component={PlaceOrderPage} />
-            <Drawer.Screen name="Other Stores" component={OtherStoreList} />
+            <Drawer.Screen name="Prescriptions" component={OtherStoreList} />
+            <Drawer.Screen name="History">{props => <History {...props} userId={userId} />}</Drawer.Screen>
+            <Drawer.Screen name="Sign Out" component={Login} />
         </Drawer.Navigator>
     );
 }
 
-const styles = {
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#FFFFFF'
-    }
-}
 
-export default function DrawerNav() {
+export default function DrawerNav({userId}) {
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <NavigationContainer>
-                <MyDrawer />
-            </NavigationContainer>
-        </SafeAreaView>
+        <MyDrawer userId={userId}/>
     );
 }
 
