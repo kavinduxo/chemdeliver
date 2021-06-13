@@ -25,13 +25,13 @@ function CustomDrawerContent(props) {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer({userId, signout}) {
+function MyDrawer({user, signout}) {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
             <Drawer.Screen name="Home" component={PlaceOrderPage} />
-            <Drawer.Screen name="Prescriptions">{props => <PrescriptionList {...props} userId={userId} />}</Drawer.Screen>
+            <Drawer.Screen name="Prescriptions">{props => <PrescriptionList {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="Stores" component={OtherStoreList} />
-            <Drawer.Screen name="History">{props => <History {...props} userId={userId} />}</Drawer.Screen>
+            <Drawer.Screen name="History">{props => <History {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="Sign Out" component={() => {return signout()}} />
             <Drawer.Screen name="Prescription Information" options={{drawerLabel:() => null, title: null, drawerIcon:() => null}}>
                 {props => <PrescriptionInformation {...props} userId={userId} />}</Drawer.Screen>
@@ -39,9 +39,10 @@ function MyDrawer({userId, signout}) {
     );
 }
 
-export default function DrawerNav({userId, signout}) {
+
+export default function DrawerNav({user, signout}) {
     return (
-        <MyDrawer userId={userId} signout={signout}/>
+        <MyDrawer user={user} signout={signout}/>
     );
 }
 

@@ -43,14 +43,15 @@ function PrescriptionRoute() {
         )
 }
 
-function PrescriptionList(props){
+function PrescriptionList({navigation, user}){
+ console.log(user.medicalId)
  return (
           <SafeAreaView>
             <FlatList
               data={DATA}
               keyExtractor={item => item.script_id.toString()}
               renderItem={(item) => (
-                <PrescriptionCard navigation={props.navigation} prescription={item}/>
+                <PrescriptionCard navigation={navigation} prescription={item}/>
               )}
             />
           </SafeAreaView>
