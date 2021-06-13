@@ -36,7 +36,6 @@ const instanceByStoreTwc = axios.create({
 
 export async function getStoreByIdCwh(storeId) {
     try {
-        // console.log(`store ID ${storeId}`)
         const response = await instanceByStoreCwh.get(`/getStore/${storeId}`);
         return response.data[0];
     } catch (err) {
@@ -48,8 +47,7 @@ export async function getStoreByIdCwh(storeId) {
 export async function getStoreByIdTwc(storeId) {
     try {
         const response = await instanceByStoreTwc.get('getStore/' + storeId);
-        console.log(response)
-        return response;
+        return response.data[0];
     } catch (err) {
         console.log(err);
         return null;
@@ -59,8 +57,7 @@ export async function getStoreByIdTwc(storeId) {
 export async function getStoresByPostCodeCwh(postCode) {
     try {
         const response = await instanceByPostCwh.get('getStoreByPostcode/' + postCode);
-        console.log(response)
-        return response;
+        return response.data;
     } catch (err) {
         console.log(err);
         return null;
@@ -69,9 +66,8 @@ export async function getStoresByPostCodeCwh(postCode) {
 
 export async function getStoresByPostCodeTwc(postCode) {
     try {
-        const response = await instanceByPostTwc.get('getStoreByPostcode/' + postCode);
-        console.log(response)
-        return response;
+        const response = await instanceByPostTwc.get(`getStoreByPostcode/${postCode}`);
+        return response.data;
     } catch (err) {
         console.log(err);
         return null;

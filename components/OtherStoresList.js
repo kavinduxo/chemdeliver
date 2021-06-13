@@ -2,15 +2,55 @@ import React, { useState } from 'react'
 import { Platform, Keyboard } from 'react-native';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native'
 import Stores from './Stores';
+import { Spinner } from 'native-base';
+import { getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService';
 
-const OtherStoreList = () => {
+const OtherStoreList = ({ user }) => {
 
     const [postCode, setPostCode] = useState();
 
-    const handleSearchStore = () => {
+    const handleSearchStore = async () => {
+        const data = await getStoresByPostCodeTwc(postCode);
+        const data1 = await getStoresByPostCodeCwh(postCode);
+        const filteredData = [];
+        data.forEach(element => {
+            if (element.postcode != user.postcode) {
+                filteredData.push(element);
+            }
+        });
+        data1.forEach(element => {
+            if (element.postcode != user.postcode) {
+                filteredData.push(element);
+            }
+        });
+        setStoreData(filteredData);
         Keyboard.dismiss();
         setPostCode(null);
     }
+
+    const [storeData, setStoreData] = useState(null);
+
+    const stores = () => {
+
+        if (!storeData) {
+            return <Spinner />
+        } else {
+
+            const stores = storeData.map((store) => {
+                return (
+                    <View style={styles.items}>
+                        <Stores id={"◉ Pharmacy ID   ✑ " + store.pharmacyID}
+                            postcode={"◉ Post Code        ✑ " + store.postcode}
+                            name={"◉ " + store.name}
+                            contact={"◉ Contact No      ✑ " + store.contact_no} />
+                    </View>
+                )
+            });
+
+            return stores;
+        }
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollView}>
@@ -18,17 +58,9 @@ const OtherStoreList = () => {
                     <Text style={styles.sectionTitle}>
                         Other Stores
                     </Text>
-                    <View style={styles.items}>
-                        <Stores text={'Store X               * 102km'} />
-                        <Stores text={'Store Y               * 78km'} />
-                        <Stores text={'Store XY              * 203km'} />
-                        <Stores text={'Store X               * 102km'} />
-                        <Stores text={'Store Y               * 78km'} />
-                        <Stores text={'Store XY              * 203km'} />
-                        <Stores text={'Store X               * 102km'} />
-                        <Stores text={'Store Y               * 78km'} />
-                        <Stores text={'Store XY              * 203km'} />
-                    </View>
+
+                     {stores()}
+
                 </View>
             </ScrollView>
             <KeyboardAvoidingView
