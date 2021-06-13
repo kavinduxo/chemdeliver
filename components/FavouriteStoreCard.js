@@ -5,19 +5,23 @@ import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService';
 
 
 function FavouriteStoreCard(props) {
-
+  
     const [storeId, setStoreId] = useState();
-
+    const [favouriteCardProps, setFavouriteCardProps] = useState({});
     const handleSetStore = async () => {
         try {
-            var newCode = await getStoreByIdCwh(storeId)
+            var favCard = await getStoreByIdCwh(storeId)
+            setFavouriteCardProps(favCard);
+            console.log(favouriteCardProps);
             setStoreId(null);
             Keyboard.dismiss();
             
         } catch (error) {
-            // console.log(error);
+            console.log(error);
         }
     }
+
+    
 
     return (
         <Card>
@@ -25,7 +29,7 @@ function FavouriteStoreCard(props) {
                 color: '#66667E',
                 width: 300
             }}
-            >Favourite Store ID: {props.storeId}</Card.Title>
+            >Favourite Store ID: {favouriteCardProps.pharmacyID}</Card.Title>
             <Card.Divider />
             <Text style={{
                 marginBottom: 5,
@@ -34,7 +38,7 @@ function FavouriteStoreCard(props) {
                 fontWeight: "bold",
                 textAlign: "center"
             }}>
-                {props.address}
+                {favouriteCardProps.address}
             </Text>
             <Text style={{
                 alignContent: 'center',
@@ -43,7 +47,7 @@ function FavouriteStoreCard(props) {
                 fontSize: 20,
                 textAlign: "center"
             }}>
-                {props.storeName}
+                {favouriteCardProps.name}
             </Text>
 
 
@@ -64,14 +68,14 @@ function FavouriteStoreCard(props) {
                         color: "#153E73",
                         fontWeight: "bold",
                     }}>
-                        Postcode: {props.postCode}
+                        Postcode: {favouriteCardProps.postcode}
                     </Text>
                     <Text style={{
                         marginBottom: 10,
                         color: "#153E73",
                         fontWeight: "bold",
                     }}>
-                        Contact: {props.contact}
+                        Contact: {favouriteCardProps.contact_no}
                     </Text>
                 </View>
             </View>

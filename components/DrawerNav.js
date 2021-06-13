@@ -26,21 +26,21 @@ function CustomDrawerContent(props) {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer({userId}) {
+function MyDrawer({user}) {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-            <Drawer.Screen name="Home" component={PlaceOrderPage} />
+            <Drawer.Screen name="Home">{props => <PlaceOrderPage {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="Prescriptions" component={OtherStoreList} />
-            <Drawer.Screen name="History">{props => <History {...props} userId={userId} />}</Drawer.Screen>
+            <Drawer.Screen name="History">{props => <History {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="Sign Out" component={Login} />
         </Drawer.Navigator>
     );
 }
 
 
-export default function DrawerNav({userId}) {
+export default function DrawerNav({user}) {
     return (
-        <MyDrawer userId={userId}/>
+        <MyDrawer user={user}/>
     );
 }
 

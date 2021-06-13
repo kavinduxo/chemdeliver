@@ -20,7 +20,8 @@ export default function App() {
   const login = async (user) => {
     const existingUser = {
       userId: "sadeshS",
-      password: "123456789"
+      password: "123456789",
+      postcode: "samplePost"
     }
     if (user.userId == existingUser.userId && user.password == existingUser.password) {
       setProfile(existingUser);
@@ -47,7 +48,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
               <Stack.Screen name="DrawerNav">
-                {props => <DrawerNav {...props} userId={profile.userId} />}
+                {props => <DrawerNav {...props} user={profile} />}
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>

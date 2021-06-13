@@ -5,8 +5,7 @@ import FavouriteStoreCard from './FavouriteStoreCard'
 import { createOrder } from '../services/ordersService'
 
 
-const OrderForm = () => {
-
+const OrderForm = ({user}) => {
     let favouriteCardProps = {
         storeId: 'AB123',
         address: 'Cnr Manchester Rd &, Gooding Dr, Carrara QLD 4211, Aus',
@@ -14,9 +13,11 @@ const OrderForm = () => {
         postCode: '4211',
         contact: '+61755XXXXXX'
     };
-
+    var mainUser = user.userId;
+    var mainUserPost = user.postcode;
     const [storeId, setStoreId] = useState();
     const [prescNo, setPrescNo] = useState();
+    const [favStore, setFavStore] = useState();
 
     const showSimpleAlert = (alertTitle, alertMsg) => {
         Alert.alert(alertTitle, alertMsg, [
@@ -27,8 +28,8 @@ const OrderForm = () => {
     const handleSetOrder = async () => {
         try {
             var currentDateTime = new Date();
-            var postCode = 'xx';
-            var userId = 'test';
+            var postCode = mainUserPost;
+            var userId = mainUser;
             var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
             var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
             await createOrder(order);
