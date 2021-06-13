@@ -8,6 +8,8 @@ import {
 import OtherStoreList from './OtherStoresList';
 import PlaceOrderPage from './PlaceOrderPage';
 import History from './History';
+import PrescriptionList from './PrescriptionList';
+import PrescriptionInformation from './PrescriptionInformation';
 
 function CustomDrawerContent(props) {
     return (
@@ -27,9 +29,11 @@ function MyDrawer({user, signout}) {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
             <Drawer.Screen name="Home">{props => <PlaceOrderPage {...props} user={user} />}</Drawer.Screen>
-            <Drawer.Screen name="Prescriptions" component={OtherStoreList} />
+            <Drawer.Screen name="Prescriptions">{props => <PrescriptionList {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="History">{props => <History {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="Sign Out" component={() => {return signout()}} />
+            <Drawer.Screen name="Prescription Information" options={{drawerLabel:() => null, title: null, drawerIcon:() => null}}>
+                {props => <PrescriptionInformation {...props} user={user} />}</Drawer.Screen>
         </Drawer.Navigator>
     );
 }

@@ -22,16 +22,20 @@ export default function App() {
 
   const login = async (user) => {
     setIsLoading(true);
-    if(user.userId != '') {
-      const existingUser = await getUser(user?.userId);
-      const decode = Base64.decode(existingUser.password)
-      if (user?.userId == existingUser.medicalId && user?.password == decode) {
-        setProfile(existingUser);
-        setIsUserLoggedIn(true);
+    try{
+          if(user.userId != '') {
+          const existingUser = await getUser(user?.userId);
+          const decode = Base64.decode(existingUser.password)
+          if (user?.userId == existingUser.medicalId && user?.password == decode) {
+               setProfile(existingUser);
+               setIsUserLoggedIn(true);
+          }
       }
-    }
-    setIsLoading(false);
+      setIsLoading(false);
+  } catch (err) {
+      setIsLoading(false);
   }
+}
 
   const Stack = createStackNavigator();
 
