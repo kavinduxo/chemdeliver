@@ -31,3 +31,13 @@ export async function getOrders() {
         return null;
     }
 }
+
+export async function createOrder(data) {
+    try {
+        const response = await instance.put('order', data);
+        return true;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
+}

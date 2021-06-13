@@ -2,20 +2,16 @@ import React, { useState } from 'react'
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert } from 'react-native'
 import { Card } from 'react-native-elements'
 import FavouriteStoreCard from './FavouriteStoreCard'
+import { createOrder } from '../services/ordersService'
+import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService'
 
 
-const OrderForm = () => {
-
-    let favouriteCardProps = {
-        storeId: 'AB123',
-        address: 'Cnr Manchester Rd &, Gooding Dr, Carrara QLD 4211, Aus',
-        storeName: 'DOCHEM Pharmacy',
-        postCode: '4211',
-        contact: '+61755XXXXXX'
-    };
-
-    const [postCode, setPostCode] = useState();
+const OrderForm = ({user}) => {
+    var mainUser = user.medicalId;
+    var mainUserPost = user.postcode;
+    const [storeId, setStoreId] = useState();
     const [prescNo, setPrescNo] = useState();
+    const [favStore, setFavStore] = useState();
 
     const showSimpleAlert = (alertTitle, alertMsg) => {
         Alert.alert(alertTitle, alertMsg, [
@@ -23,18 +19,27 @@ const OrderForm = () => {
         ])
     }
 
-    const handleSetOrder = () => {
-        console.log(postCode);
-        Keyboard.dismiss();
-        setPostCode(null);
-        setPrescNo(null);
-        showSimpleAlert("Purchased Successfully!", "Order Ref: ab@c12QW")
+    const handleSetOrder = async () => {
+        try {
+            var currentDateTime = new Date();
+            var postCode = mainUserPost;
+            var userId = mainUser;
+            var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
+            var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
+            await createOrder(order);
+            Keyboard.dismiss();
+            setStoreId(null);
+            setPrescNo(null);
+            showSimpleAlert("Purchased Successfully!", "Order Ref: " + orderId);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollView}>
-                <FavouriteStoreCard {...favouriteCardProps} />
+                <FavouriteStoreCard user={user} />
                 <Card>
                     <Card.Title style={{
                         color: '#FF7F50',
@@ -47,7 +52,7 @@ const OrderForm = () => {
                     <KeyboardAvoidingView
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                         style={styles.inputStoreWrapper}>
-                        <TextInput style={styles.input} placeholder={'Enter Store ID'} value={postCode} onChangeText={text => setPostCode(text)} />
+                        <TextInput style={styles.input} placeholder={'Enter Store ID'} value={storeId} onChangeText={text => setStoreId(text)} />
                         <TextInput style={styles.input} placeholder={'Enter Pres. No.'} value={prescNo} onChangeText={text => setPrescNo(text)} />
                     </KeyboardAvoidingView>
                     <Card.Divider />
