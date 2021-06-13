@@ -3,7 +3,6 @@ import Login from './components/Login';
 import { NavigationContainer } from '@react-navigation/native';
 import { useState } from "react";
 import { createStackNavigator } from '@react-navigation/stack';
-import History from './components/History';
 import Signup from './components/Signup';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import DrawerNav from './components/DrawerNav';
@@ -19,7 +18,7 @@ export default function App() {
 
   const login = async (user) => {
     const existingUser = {
-      userId: "sadeshS",
+      userId: "KavinduG",
       password: "123456789"
     }
     if (user.userId == existingUser.userId && user.password == existingUser.password) {
@@ -30,10 +29,9 @@ export default function App() {
 
   const Stack = createStackNavigator();
 
-  return <History/>
-  //  (
-    // <SafeAreaProvider>
-      {/* {!isUserLoggedIn ? (
+  return (
+    <SafeAreaProvider>
+      {!isUserLoggedIn ? (
         <NavigationContainer>
           <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Login">
@@ -52,9 +50,9 @@ export default function App() {
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>
-      )} */}
+      )}
 
-    {/* </SafeAreaProvider> */}
-    
-  // );
+    </SafeAreaProvider>
+
+  );
 }

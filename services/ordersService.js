@@ -6,10 +6,26 @@ const instance = axios.create({
     headers: { 'Content-Type': 'application/json' }
 })
 
+const instanceDrugsByPrescription = axios.create({
+    baseURL: 'http://ec2-54-66-253-23.ap-southeast-2.compute.amazonaws.com:6500',
+    timeout: 1000000,
+    headers: { Authorization: `Bearer c60812f728a3356b4ee2b69b5bf4f14d` }
+});
+
+export const getDrugs = async (prescriptionId) => {
+    try {
+        const response = await instanceDrugsByPrescription.get(`/getSpecificRecord/${prescriptionId}`);
+        return response.data[0];
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}
+
 export async function getOrders() {
     try {
         const response = await instance.get('orders');
-        return response.json().data.Items;
+        return response.data.Items;
     } catch (err) {
         console.log(err);
         return null;

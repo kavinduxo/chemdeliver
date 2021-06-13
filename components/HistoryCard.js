@@ -1,17 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Alert } from 'react-native';
 import { Button } from 'react-native-elements';
 import HistoryCardItem from './HistoryCardItem';
+import { getDrugs } from '../services/ordersService';
+import { Spinner } from 'native-base';
 
 export default function HistoryCard(props) {
 
+    useEffect(() => {
+        async function getData() {
+            // const drugs = await getDrugs("142981");
+            const drugs = await getDrugs(props.PrescriptionId);
+            const drugDataArr = [];
+            drugDataArr.push(drugs)
+            setDrugData(drugDataArr);
+        }
+        getData();
+    }, []);
+
+    const [drugData, setDrugData] = useState(null);
+
     const drugList = () => {
-        return props.Drugs.map((drug) => {
-            return (
-                <HistoryCardItem key={drug.Id} ItemName={drug.name} Quantity={drug.name} />
-            );
-        });
-    };
+
+        if (!drugData) {
+            return <Spinner />
+        } else {
+
+            const drugs = eval(drugData[0].drugs).map((drug,index) => {
+                
+                return (
+                    <View>
+                        <HistoryCardItem
+                            key={index}
+                            ItemName={drug.name}
+                            Quantity={drug.qty}
+                        />
+                    </View>
+                )
+            });
+            return drugs;
+        };
+    }
 
     return (
 
@@ -44,7 +73,6 @@ export default function HistoryCard(props) {
                 buttonStyle={{ borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor: '#C65D5D' }}
                 color="#C65D5D"
                 title="Reorder"
-                // onPress={() => orders()}
                 onPress={() => Alert.alert('Reorder Complete!')}
             />
 
