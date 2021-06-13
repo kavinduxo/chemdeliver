@@ -58,5 +58,6 @@ export default function App() {
           </NavigationContainer>
         )}
     </SafeAreaProvider>
+
   );
 }
