@@ -29,11 +29,11 @@ const OrderForm = () => {
             var currentDateTime = new Date();
             var postCode = 'xx';
             var userId = 'test';
-            var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentdate.getHours() + currentdate.getMinutes() + currentdate.getSeconds();
+            var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
             var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
             await createOrder(order);
             Keyboard.dismiss();
-            setPostCode(null);
+            setStoreId(null);
             setPrescNo(null);
             showSimpleAlert("Purchased Successfully!", "Order Ref: " + orderId);
         } catch (error) {
