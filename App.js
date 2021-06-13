@@ -52,7 +52,7 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
               <Stack.Screen name="DrawerNav">
-                {props => <DrawerNav {...props} userId={profile.userId} signout={signout} />}
+                {props => <DrawerNav {...props} user={profile} signout={signout}/>}
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>
