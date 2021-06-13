@@ -10,12 +10,12 @@ const FirstRoute = ({user}) => (
     <OrderForm  user={user}/>
 );
 
-const SecondRoute = () => (
-    <ClosestStoreList />
+const SecondRoute = ({user}) => (
+    <ClosestStoreList user={user}/>
 );
 
-const ThirddRoute = () => (
-    <OtherStoreList />
+const ThirddRoute = ({user}) => (
+    <OtherStoreList user={user}/>
 );
 
 const PlaceOrderPage = ({ navigation, user }) => {
@@ -29,8 +29,8 @@ const PlaceOrderPage = ({ navigation, user }) => {
 
     const renderScene = SceneMap({
         first: () => <FirstRoute user={user} />,
-        second: SecondRoute,
-        third: ThirddRoute
+        second: () => <SecondRoute user={user} />,
+        third: () => <ThirddRoute user={user} />,
     });
 
     return (
