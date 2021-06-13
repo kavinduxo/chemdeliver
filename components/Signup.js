@@ -136,7 +136,7 @@ function Signup ({ navigation }) {
                             >
                                 <Text style={styles.nextTxt}>Next</Text>
                             </Button>
-                            <Text style={styles.login}>Already have an Account? Login <Text style={styles.loginTxt} onPress={() => {navigation.navigate("Login")}}>Login</Text></Text>
+                            <Text style={styles.login}>Already have an Account? <Text style={styles.loginTxt} onPress={() => {navigation.navigate("Login")}}>Login</Text></Text>
                         </>
                     }
                     {!isLoading && isPartTwoVisible &&           
