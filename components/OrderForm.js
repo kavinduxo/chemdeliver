@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert } from 'react-native'
 import { Card } from 'react-native-elements'
 import FavouriteStoreCard from './FavouriteStoreCard'
+import { createOrder } from '../services/ordersService'
 
 
 const OrderForm = () => {
@@ -14,7 +15,7 @@ const OrderForm = () => {
         contact: '+61755XXXXXX'
     };
 
-    const [postCode, setPostCode] = useState();
+    const [storeId, setStoreId] = useState();
     const [prescNo, setPrescNo] = useState();
 
     const showSimpleAlert = (alertTitle, alertMsg) => {
@@ -23,12 +24,21 @@ const OrderForm = () => {
         ])
     }
 
-    const handleSetOrder = () => {
-        console.log(postCode);
-        Keyboard.dismiss();
-        setPostCode(null);
-        setPrescNo(null);
-        showSimpleAlert("Purchased Successfully!", "Order Ref: ab@c12QW")
+    const handleSetOrder = async () => {
+        try {
+            var currentDateTime = new Date();
+            var postCode = 'xx';
+            var userId = 'test';
+            var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentdate.getHours() + currentdate.getMinutes() + currentdate.getSeconds();
+            var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
+            await createOrder(order);
+            Keyboard.dismiss();
+            setPostCode(null);
+            setPrescNo(null);
+            showSimpleAlert("Purchased Successfully!", "Order Ref: " + orderId);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -47,7 +57,7 @@ const OrderForm = () => {
                     <KeyboardAvoidingView
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                         style={styles.inputStoreWrapper}>
-                        <TextInput style={styles.input} placeholder={'Enter Store ID'} value={postCode} onChangeText={text => setPostCode(text)} />
+                        <TextInput style={styles.input} placeholder={'Enter Store ID'} value={storeId} onChangeText={text => setStoreId(text)} />
                         <TextInput style={styles.input} placeholder={'Enter Pres. No.'} value={prescNo} onChangeText={text => setPrescNo(text)} />
                     </KeyboardAvoidingView>
                     <Card.Divider />

@@ -1,23 +1,29 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard } from 'react-native'
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
+import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService';
 
 
 function FavouriteStoreCard(props) {
 
-    const [postCode, setPostCode]= useState();
+    const [storeId, setStoreId] = useState();
 
-    const handleSetStore = () => {
-        // console.log(postCode);
-        Keyboard.dismiss();
-        setPostCode(null);
+    const handleSetStore = async () => {
+        try {
+            var newCode = await getStoreByIdCwh(storeId)
+            setStoreId(null);
+            Keyboard.dismiss();
+            
+        } catch (error) {
+            // console.log(error);
+        }
     }
 
     return (
         <Card>
             <Card.Title style={{
                 color: '#66667E',
-                width: 300 
+                width: 300
             }}
             >Favourite Store ID: {props.storeId}</Card.Title>
             <Card.Divider />
@@ -72,14 +78,14 @@ function FavouriteStoreCard(props) {
             <Card.Divider />
             <Card.Title style={{
                 color: '#66667E',
-                width: '100%' 
+                width: '100%'
             }}
             >Change Favourite</Card.Title>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.inputStoreWrapper}>
-                <TextInput style={styles.input} placeholder={'Enter a postcode..'} value={postCode} onChangeText={text => setPostCode(text)}/>
-                <TouchableOpacity onPress={() => handleSetStore()}>
+                <TextInput style={styles.input} placeholder={'Enter a store ID..'} value={storeId} onChangeText={text => setStoreId(text)} />
+                <TouchableOpacity onPress={async () => await handleSetStore()}>
                     <View style={styles.searchWrapper}>
                         <Text style={styles.textOnSearch}>+</Text>
                     </View>
