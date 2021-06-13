@@ -44,6 +44,7 @@ export default function HistoryCard(props) {
                 buttonStyle={{ borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor: '#C65D5D' }}
                 color="#C65D5D"
                 title="Reorder"
+                // onPress={() => orders()}
                 onPress={() => Alert.alert('Reorder Complete!')}
             />
 

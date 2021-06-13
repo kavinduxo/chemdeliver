@@ -30,28 +30,31 @@ export default function App() {
 
   const Stack = createStackNavigator();
 
-  return (
-    <SafeAreaProvider>
-        {!isUserLoggedIn ? (
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Login">
-                {props => <Login {...props} login={login} />}
-              </Stack.Screen>
-              <Stack.Screen name="Signup">
-                {props => <Signup {...props} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        ):(  
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="DrawerNav">
-                {props => <DrawerNav {...props} userId={profile.userId} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        )}
-    </SafeAreaProvider>
-  );
+  return <History/>
+  //  (
+    // <SafeAreaProvider>
+      {/* {!isUserLoggedIn ? (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login">
+              {props => <Login {...props} login={login} />}
+            </Stack.Screen>
+            <Stack.Screen name="Signup">
+              {props => <Signup {...props} />}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      ) : (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="DrawerNav">
+              {props => <DrawerNav {...props} userId={profile.userId} />}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      )} */}
+
+    {/* </SafeAreaProvider> */}
+    
+  // );
 }
