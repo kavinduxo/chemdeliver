@@ -4,14 +4,14 @@ import HistoryCard from './HistoryCard';
 import { getOrders } from '../services/ordersService';
 import { Spinner } from 'native-base';
 
-export default function History({ userId }) {
+export default function History({ user }) {
 
     useEffect(() => {
         async function getData() {
             const data = await getOrders();
             const filteredData = [];
             data.forEach(element => {
-                if (element.userId == userId) {
+                if (element.userId == user.medicalId) {
                     filteredData.push(element);
                 }
             });
@@ -27,7 +27,6 @@ export default function History({ userId }) {
         if (!orderData) {
             return <Spinner />
         } else {
-            // console.log(orderData)
             const orders = orderData.map((order) => {
                 return (
                     <View style={{ marginBottom: 20 }}>

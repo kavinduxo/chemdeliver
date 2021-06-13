@@ -9,7 +9,6 @@ export default function HistoryCard(props) {
 
     useEffect(() => {
         async function getData() {
-            // const drugs = await getDrugs("142981");
             const drugs = await getDrugs(props.PrescriptionId);
             const drugDataArr = [];
             drugDataArr.push(drugs)

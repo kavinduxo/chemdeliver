@@ -27,7 +27,6 @@ function Signup ({ navigation }) {
         try{
             setIsLoading(true);
             if (user?.medicalId && user?.password && (user?.password == user?.cPassword)){
-                console.log(user);
                 let updatedUser = {
                     fName: user.fName,
                     lName: user.lName,
@@ -41,7 +40,6 @@ function Signup ({ navigation }) {
                     postcode: user.postcode,
                     password: Base64.encode(user.password)
                 }
-                console.log(updatedUser);
                 if (await createUser(updatedUser)){
                     Toast.show({
                         text: "User Created!",
