@@ -8,7 +8,6 @@ const OtherStoreList = () => {
     const [postCode, setPostCode] = useState();
 
     const handleSearchStore = () => {
-        console.log(postCode);
         Keyboard.dismiss();
         setPostCode(null);
     }
