@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'react-native-gesture-handler';
 import { View, Text } from 'react-native'
 import { Card, Button, Icon } from 'react-native-elements'
+import {getDoctor} from '../services/PrescriptionService'
+
 
 function PrescriptionCard ({navigation, prescription}) {
     
@@ -30,7 +32,7 @@ function PrescriptionCard ({navigation, prescription}) {
             fontWeight: "bold",
             textAlign: "center"
         }}>
-            {prescription.item.date}, Dr.Mason
+            {prescription.item.date}, Dr Shane
             </Text>  
             <Text style={{
             alignContent: 'center',
@@ -59,7 +61,6 @@ function PrescriptionCard ({navigation, prescription}) {
                 color:"#153E73",
                 fontWeight: "bold",
                 }}>
-                ID  1234
             </Text>        
                 <Icon
                     name='trash-outline'

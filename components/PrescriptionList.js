@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+
 import PrescriptionCard from './PrescriptionCard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -36,7 +36,7 @@ function PrescriptionList({navigation, user}){
 
   useEffect(() => {
     async function getData(){
-      const data = await getList('222771');
+      const data = await getList('2227715');
       setData(data)
       console.log(data)
       setLoader(false)  
@@ -44,9 +44,6 @@ function PrescriptionList({navigation, user}){
     getData();
   }, []);
  
-
- console.log(data);
-
  return (
           <SafeAreaView>
           {isLoading ? 
@@ -54,7 +51,6 @@ function PrescriptionList({navigation, user}){
                 :(
                     <>
                     {data.length === 0 ? 
-                    
                       <View >
                         <Text style={{
                           fontSize: 20,

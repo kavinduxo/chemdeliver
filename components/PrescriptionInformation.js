@@ -5,7 +5,7 @@ import { Card, Button, Icon, SafeAreaView, FlatList } from 'react-native-element
 function PrescriptionInformation({route, user}) {
 
 let drugLst = eval(route.params.prescription.item.drugs);
-
+console.log(drugLst)
 const drugList = () => {
     return drugLst.map((drug) => {
         return (
@@ -41,13 +41,14 @@ const drugList = () => {
                 textAlign: "left"
             }}>
                 Price: $20
+                <Card.Divider/>
+                {drug.repeats}
                 </Text> 
                 </View>
             </Card>
         );
     });
 };
-
 return(
     <View style={{alignSelf:'center', paddingTop: 100}}>
     <View>{drugList()}</View>
