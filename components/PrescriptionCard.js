@@ -5,6 +5,20 @@ import { Card, Button, Icon } from 'react-native-elements'
 
 function PrescriptionCard ({navigation, prescription}) {
     
+    const drugList = () => {
+        return eval(prescription.item.drugs).map((drug) => {
+            return (
+                <Text style={{
+                    marginBottom: 5,
+                    alignContent: 'center',
+                    color:"#153E73",
+                    fontWeight: "bold", 
+                    textAlign: "left"
+                }}>Name: {drug.name} - {drug.qty}</Text>
+            );
+        });
+    };
+
     return (
         <Card>
         <Card.Title style={{color:'#66667E', width: 300}}>Script ID: {prescription.item.script_id}</Card.Title>
@@ -24,8 +38,9 @@ function PrescriptionCard ({navigation, prescription}) {
             fontWeight: "bold",
             textAlign: "center"
         }}>
-            Panadol
         </Text>  
+
+        <View>{drugList()}</View>
 
         <View style={{
             flexDirection: "column",

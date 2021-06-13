@@ -5,26 +5,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PrescriptionInformation from './PrescriptionInformation';
 import { SafeAreaView, FlatList} from 'react-native'; 
 import axios from 'axios';
+import {getList} from '../services/PrescriptionService'
+
 
 const Stack = createStackNavigator();
 
 function PrescriptionRoute() {
-
-  getPrescriptionList();
-
-  // const [isLoading, setLoading] = useState(true);
-  // const [data, setData] = useState([]);
-  // console.log(data);
-
-  // useEffect(() => {
-  //   fetch('ec2-54-66-253-23.ap-southeast-2.compute.amazonaws.com:6500/getAllRecords/2227715',
-  //   {method: 'GET',
-  //   headers: {'Authorization' : 'Bearer c60812f728a3356b4ee2b69b5bf4f14d' }})
-  //     .then((response) => response.json())
-  //     .then((json) => setData(json))
-  //     .catch((error) => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
 
     return(
           <NavigationContainer>
@@ -44,7 +30,15 @@ function PrescriptionRoute() {
 }
 
 function PrescriptionList({navigation, user}){
- console.log(user.medicalId)
+
+  const [data, setData] = useState([]);
+
+  //console.log(getList('2227715'))
+
+  useEffect(() => {
+    //setData(getList('2227715'))
+  }, []);
+ 
  return (
           <SafeAreaView>
             <FlatList
@@ -57,22 +51,6 @@ function PrescriptionList({navigation, user}){
           </SafeAreaView>
         )
 }
-
-const getPrescriptionList = async () => {
-  try {
-    const response = await axios.get(
-      'http://ec2-54-66-253-23.ap-southeast-2.compute.amazonaws.com:6500/getAllRecords/2227715',
-      {
-        headers: {
-          Authorization: 'Bearer c60812f728a3356b4ee2b69b5bf4f14d'
-        }
-      }
-    );
-    alert(JSON.stringify(response.data));
-  } catch (error) {
-    alert(error.message);
-  }
-};
 
 const DATA = [
   {
