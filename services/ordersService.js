@@ -15,3 +15,13 @@ export async function createOrder(data) {
         return false;
     }
 }
+
+export async function updateUserStore(id, store) {
+    try{
+        const response = await instance.put('user/' + id, store);
+        return response;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+}

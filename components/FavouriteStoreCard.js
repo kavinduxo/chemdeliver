@@ -2,17 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard } from 'react-native'
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService';
+import { updateUserStore } from '../services/ordersService';
 
 
 function FavouriteStoreCard({ user }) {
 
     const [storeId, setStoreId] = useState();
+    var lowStoreId = '';
     const [favouriteCardProps, setFavouriteCardProps] = useState({});
     const handleSetStore = async () => {
         try {
-            var favCard = await getStoreByIdCwh(storeId)
+            var favCard = await getStoreByIdCwh(storeId);
+
+            var store = JSON.stringify({ "pPharmacy": storeId});
             setFavouriteCardProps(favCard);
-            console.log(favouriteCardProps);
+            user.preferredPharmacy = storeId
+            await updateUserStore(user.medicalId, store);
             setStoreId(null);
             Keyboard.dismiss();
 
@@ -95,7 +100,7 @@ function FavouriteStoreCard({ user }) {
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.inputStoreWrapper}>
-                <TextInput style={styles.input} placeholder={'Enter a store ID..'} value={storeId} onChangeText={text => setStoreId(text)} />
+                <TextInput style={styles.input} placeholder={'Enter a store ID..'} onChangeText={text => setStoreId(text.toLowerCase())} />
                 <TouchableOpacity onPress={async () => await handleSetStore()}>
                     <View style={styles.searchWrapper}>
                         <Text style={styles.textOnSearch}>+</Text>

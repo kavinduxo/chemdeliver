@@ -1,19 +1,63 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native'
 import Stores from './Stores';
+import { Spinner } from 'native-base';
+import { getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService';
 
-const ClosestStoreList = () => {
+const ClosestStoreList = ({ user }) => {
+
+    useEffect(() => {
+        async function getData() {
+            const data = await getStoresByPostCodeTwc(user.postcode);
+            const data1 = await getStoresByPostCodeCwh(user.postcode);
+            const filteredData = [];
+            data.forEach(element => {
+                if (element.postcode == user.postcode) {
+                    filteredData.push(element);
+                }
+            });
+            data1.forEach(element => {
+                if (element.postcode == user.postcode) {
+                    filteredData.push(element);
+                }
+            });
+            setStoreData(filteredData);
+        }
+        getData();
+    }, []);
+
+    const [storeData, setStoreData] = useState(null);
+
+    const stores = () => {
+
+        if (!storeData) {
+            return <Spinner />
+        } else {
+
+            const stores = storeData.map((store) => {
+                return (
+                    <View style={styles.items}>
+                        <Stores id={"◉ Pharmacy ID   ✑ " + store.pharmacyID}
+                            postcode={"◉ Post Code        ✑ " + store.postcode}
+                            name={"◉ " + store.name}
+                            contact={"◉ Contact No      ✑ " + store.contact_no} />
+                    </View>
+                )
+            });
+
+            return stores;
+        }
+    };
+
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.storeWrapper}>
                 <Text style={styles.sectionTitle}>
                     Stores Close by
                 </Text>
-                <View style={styles.items}>
-                    <Stores text={'Store A               * 12km'} />
-                    <Stores text={'Store B               * 20km'} />
-                    <Stores text={'Store AB              * 45km'} />
-                </View>
+
+                {stores()}
+
             </View>
         </ScrollView>
     )
@@ -32,7 +76,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     scrollView: {
-        marginHorizontal: 20,
+        marginHorizontal: 10,
     },
 });
 
