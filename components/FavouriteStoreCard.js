@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard } from 'react-native'
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
 import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService';
 
 
-function FavouriteStoreCard(props) {
-  
+function FavouriteStoreCard({ user }) {
+
     const [storeId, setStoreId] = useState();
     const [favouriteCardProps, setFavouriteCardProps] = useState({});
     const handleSetStore = async () => {
@@ -15,13 +15,20 @@ function FavouriteStoreCard(props) {
             console.log(favouriteCardProps);
             setStoreId(null);
             Keyboard.dismiss();
-            
+
         } catch (error) {
             console.log(error);
         }
     }
 
-    
+
+    useEffect(() => {
+        async function getData() {
+            const data = await getStoreByIdCwh(user.preferredPharmacy);
+            setFavouriteCardProps(data);
+        }
+        getData();
+    }, []);
 
     return (
         <Card>

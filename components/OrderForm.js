@@ -3,17 +3,11 @@ import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleShe
 import { Card } from 'react-native-elements'
 import FavouriteStoreCard from './FavouriteStoreCard'
 import { createOrder } from '../services/ordersService'
+import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService'
 
 
 const OrderForm = ({user}) => {
-    let favouriteCardProps = {
-        storeId: 'AB123',
-        address: 'Cnr Manchester Rd &, Gooding Dr, Carrara QLD 4211, Aus',
-        storeName: 'DOCHEM Pharmacy',
-        postCode: '4211',
-        contact: '+61755XXXXXX'
-    };
-    var mainUser = user.userId;
+    var mainUser = user.medicalId;
     var mainUserPost = user.postcode;
     const [storeId, setStoreId] = useState();
     const [prescNo, setPrescNo] = useState();
@@ -45,7 +39,7 @@ const OrderForm = ({user}) => {
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollView}>
-                <FavouriteStoreCard {...favouriteCardProps} />
+                <FavouriteStoreCard user={user} />
                 <Card>
                     <Card.Title style={{
                         color: '#FF7F50',
