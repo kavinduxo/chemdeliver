@@ -6,8 +6,8 @@ import OrderForm from './OrderForm';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import NavHeader from './NavHeader';
 
-const FirstRoute = () => (
-    <OrderForm />
+const FirstRoute = ({user}) => (
+    <OrderForm  user={user}/>
 );
 
 const SecondRoute = () => (
@@ -18,9 +18,9 @@ const ThirddRoute = () => (
     <OtherStoreList />
 );
 
-const PlaceOrderPage = ({ navigation }) => {
+const PlaceOrderPage = ({ navigation, user }) => {
     const layout = useWindowDimensions();
-
+    console.log("testetsts--" + user.medicalId)
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
         { key: 'first', title: 'Place Order' },
@@ -29,7 +29,7 @@ const PlaceOrderPage = ({ navigation }) => {
     ]);
 
     const renderScene = SceneMap({
-        first: FirstRoute,
+        first: () => <FirstRoute user={user} />,
         second: SecondRoute,
         third: ThirddRoute
     });
