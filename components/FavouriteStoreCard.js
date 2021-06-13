@@ -12,7 +12,6 @@ function FavouriteStoreCard({ user }) {
         try {
             var favCard = await getStoreByIdCwh(storeId)
             setFavouriteCardProps(favCard);
-            console.log(favouriteCardProps);
             setStoreId(null);
             Keyboard.dismiss();
 
