@@ -41,7 +41,16 @@ const drugList = () => {
                 textAlign: "left"
             }}>
                 Price: $20
-                <Card.Divider/>
+
+
+                </Text> 
+                <Text style={{
+                marginBottom: 5,
+                alignContent: 'center',
+                color:"#153E73",
+                fontWeight: "bold",
+                textAlign: "left"
+            }}>
                 {drug.repeats}
                 </Text> 
                 </View>

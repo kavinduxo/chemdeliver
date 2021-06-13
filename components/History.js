@@ -23,7 +23,7 @@ export default function History({ user }) {
     const [orderData, setOrderData] = useState(null);
 
     const orders = () => {
-
+        console.log(orderData)
         if (!orderData) {
             return <Spinner />
         } else {

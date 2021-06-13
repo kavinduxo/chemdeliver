@@ -20,7 +20,7 @@ export default function HistoryCard(props) {
     const [drugData, setDrugData] = useState(null);
 
     const drugList = () => {
-
+        console.log(drugData)
         if (!drugData) {
             return <Spinner />
         } else {

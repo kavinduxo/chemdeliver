@@ -7,6 +7,20 @@ import {getDoctor} from '../services/PrescriptionService'
 
 function PrescriptionCard ({navigation, prescription}) {
     
+    console.log(prescription.item.doctor_id);
+
+    const [data, setData] = useState('');
+  
+    useEffect(() => {
+      async function getData(){
+        const data = await getDoctor(prescription.item.doctor_id);
+        setData(data)
+      }
+      getData();
+
+    }, []);
+   
+
     const drugList = () => {
         return eval(prescription.item.drugs).map((drug) => {
             return (
