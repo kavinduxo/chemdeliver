@@ -37,12 +37,19 @@ const OtherStoreList = ({ user }) => {
         } else {
 
             const stores = storeData.map((store) => {
+                let imgUrl = '';
+                if (store.pharmacyID.substring(0, 3) == 'cwh') {
+                    imgUrl = 'https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg';
+                } else if (store.pharmacyID.substring(0, 3) == 'twc') {
+                    imgUrl = 'https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg';
+                }
                 return (
-                    <View style={styles.items}>
-                        <Stores id={"◉ Pharmacy ID   ✑ " + store.pharmacyID}
-                            postcode={"◉ Post Code        ✑ " + store.postcode}
-                            name={"◉ " + store.name}
-                            contact={"◉ Contact No      ✑ " + store.contact_no} />
+                    <View style={styles.items} key={store.pharmacyID}>
+                        <Stores id={store.pharmacyID}
+                            address={store.address}
+                            name={store.name}
+                            contact={store.contact_no}
+                            imgUrl={imgUrl} />
                     </View>
                 )
             });
@@ -59,7 +66,7 @@ const OtherStoreList = ({ user }) => {
                         Other Stores
                     </Text>
 
-                     {stores()}
+                    {stores()}
 
                 </View>
             </ScrollView>
@@ -89,6 +96,7 @@ const styles = StyleSheet.create({
     storeWrapper: {
         paddingTop: 20,
         paddingHorizontal: 20,
+        paddingBottom: 30
     },
     sectionTitle: {
         fontSize: 24,
