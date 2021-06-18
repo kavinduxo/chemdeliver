@@ -51,7 +51,6 @@ export async function getAllStoreTwc() {
         const response = await intanceAllStoreTwc.get(`/getAll`);
         return response.data;
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
@@ -61,7 +60,6 @@ export async function getAllStoreCwh() {
         const response = await intanceAllStoreCwh.get(`/getAll`);
         return response.data;
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
@@ -71,7 +69,6 @@ export async function getStoreByIdCwh(storeId) {
         const response = await instanceByStoreCwh.get(`/getStore/${storeId}`);
         return response.data[0];
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
@@ -81,27 +78,24 @@ export async function getStoreByIdTwc(storeId) {
         const response = await instanceByStoreTwc.get('getStore/' + storeId);
         return response.data[0];
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
 
 export async function getStoresByPostCodeCwh(postCode) {
     try {
-        const response = await instanceByPostCwh.get('getStoreByPostcode/' + postCode);
+        const response = await instanceByStoreCwh.get('getStoreByPostcode/' + postCode);
         return response.data;
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
 
 export async function getStoresByPostCodeTwc(postCode) {
     try {
-        const response = await instanceByPostTwc.get(`getStoreByPostcode/${postCode}`);
+        const response = await instanceByStoreTwc.get(`getStoreByPostcode/${postCode}`);
         return response.data;
     } catch (err) {
-        console.log(err);
         return null;
     }
 }

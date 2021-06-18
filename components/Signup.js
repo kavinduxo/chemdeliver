@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Input, Item, Button, Toast, Root, Spinner  } from 'native-base';
+import { Text, StyleSheet, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
+import { Input, Item, Button, Toast, Root, Spinner } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createUser } from '../services/usersService';
 import { Base64 } from 'js-base64';
+import  { getUserEHealth } from '../services/usersService';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService';
 
-function Signup ({ navigation }) {
+function Signup({ navigation }) {
     const [user, setUser] = useState({
         fName: '',
         lName: '',
@@ -18,29 +21,67 @@ function Signup ({ navigation }) {
         state: '',
         postcode: '',
         password: '',
-        cPassword: ''
+        cPassword: '',
+        gender: '',
+        dob: ''
     });
     const [isPartTwoVisible, setIsPartTwoVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [openGP, setOpenGP] = useState(false);
+    const [gender, setGender] = useState([
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
+        { label: 'Other', value: 'other' }
+    ]);
+    const [selectedGender, setSelectedGender] = useState(null);
+    const [openPPP, setOpenPPP] = useState(false);
+    const [pp, setPP] = useState([]);
+    const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+
+    const clickNext = () => {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if(user.medicalId == '' || user.fName == '' || user.lName == '' || user.phnNumber == '' || !selectedGender || user.dob == '' ) {
+            Toast.show({
+                text: "Please fill the above fields!",
+                buttonText: "Okay",
+                duration: 3000,
+                type: "danger",
+                position: "bottom"
+            });
+        } else if (!regex.test(user.dob)) {
+            Toast.show({
+                text: "Please enter a valid date of birth!",
+                buttonText: "Okay",
+                duration: 3000,
+                type: "danger",
+                position: "bottom"
+            });
+        } else {
+            setIsPartTwoVisible(true);
+        }
+    }
 
     const signup = async () => {
-        try{
+        try {
             setIsLoading(true);
-            if (user?.medicalId && user?.password && (user?.password == user?.cPassword)){
+            if (user.unit != '' && user.sAddress != '' && user.suburb != '' && user.state != '' && user.postcode != '' 
+                                    && user.postcode != '' && user.password != '' && (user.password == user.cPassword)) {
                 let updatedUser = {
                     fName: user.fName,
                     lName: user.lName,
                     medicalId: user.medicalId,
                     phnNumber: user.phnNumber,
-                    pPharmacy: user.pPharmacy,
+                    pPharmacy: selectedPharmacy? selectedPharmacy : '',
                     unit: user.unit,
                     sAddress: user.sAddress,
                     suburb: user.suburb,
                     state: user.state,
                     postcode: user.postcode,
-                    password: Base64.encode(user.password)
+                    password: Base64.encode(user.password),
+                    gender: selectedGender,
+                    dob: user.dob
                 }
-                if (await createUser(updatedUser)){
+                if (await createUser(updatedUser)) {
                     Toast.show({
                         text: "User Created!",
                         buttonText: "Okay",
@@ -49,15 +90,16 @@ function Signup ({ navigation }) {
                         position: "bottom"
                     })
                     setIsLoading(false);
+                } else {
+                    Toast.show({
+                        text: "There was an error while creating a user! Please try again",
+                        buttonText: "Okay",
+                        duration: 3000,
+                        type: "danger",
+                        position: "bottom"
+                    })
+                    setIsLoading(false);
                 }
-                Toast.show({
-                    text: "There was an error while creating a user! Please try again",
-                    buttonText: "Okay",
-                    duration: 3000,
-                    type: "danger",
-                    position: "bottom"
-                })
-                setIsLoading(false);
                 navigation.navigate("Login");
             } else {
                 Toast.show({
@@ -69,12 +111,82 @@ function Signup ({ navigation }) {
                 })
                 setIsLoading(false);
             }
-        } catch(err) {
-            console.log(err);
+        } catch (err) {
+            Toast.show({
+                text: "There was an error while creating a user! Please try again",
+                buttonText: "Okay",
+                duration: 3000,
+                type: "danger",
+                position: "bottom"
+            })
+            setIsLoading(false);
         }
     }
 
-    return(
+    const getDataFromMedicareId = async () => {
+        if(user.medicalId != '') {
+            const data = await getUserEHealth(user.medicalId);
+            if(data){
+                const address = data.address.split(', ');
+                setUser({
+                    fName: data.firstName,
+                    lName: data.lastName,
+                    medicalId: data.medicare_number,
+                    phnNumber: data.telephoneNumber.toString(),
+                    pPharmacy: '',
+                    unit: address[0].split(' ')[0],
+                    sAddress:  address[0].split(' ')[1],
+                    suburb: address[1],
+                    state: '',
+                    postcode: address[2],
+                    password: '',
+                    cPassword: '',
+                    gender: '',
+                    dob: '' 
+                });
+
+                let storesCWH = await getStoresByPostCodeCwh(address[2]);
+                let storesTWC = await getStoresByPostCodeTwc(address[2]);
+
+                let stores = [];
+                storesCWH?.map((store) => {
+                    stores.push({
+                        label: store.name + ", " + store.address,
+                        value: store.pharmacyID
+                    })
+                });
+                storesTWC?.map((store) => {
+                    stores.push({
+                        label: store.name + ", " + store.address,
+                        value: store.pharmacyID
+                    })
+                });
+                setPP(stores);
+            } else {
+                setUser({
+                    fName: '',
+                    lName: '',
+                    medicalId: user.medicalId,
+                    phnNumber: '',
+                    pPharmacy: '',
+                    unit: '',
+                    sAddress:  '',
+                    suburb: '',
+                    state: '',
+                    postcode: '',
+                    password: '',
+                    cPassword: '',
+                    gender: '',
+                    dob: '' 
+                });
+
+                let stores = [];
+                setPP(stores);
+            }
+        }
+    }
+
+    return (
         <Root>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <SafeAreaView style={styles.container}>
@@ -82,130 +194,166 @@ function Signup ({ navigation }) {
                     <Text style={styles.signupSubtitleTxt}>Add your details to sign up</Text>
 
                     {isLoading &&
-                        <Spinner color='#00CBBC'/>
+                        <Spinner color='#00CBBC' />
                     }
-                    
+
                     {!isPartTwoVisible && !isLoading &&
                         <>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
+                                    placeholder="Medicare Id"
+                                    placeholderTextColor="#b2b8b5"
+                                    value={user.medicalId}
+                                    onChangeText={medicalId => setUser({ ...user, medicalId: medicalId })}
+                                    onEndEditing={getDataFromMedicareId}
+                                />
+                            </Item>
+                            <Item rounded style={styles.input}>
+                                <Input style={{ paddingLeft: "10%" }}
                                     placeholder="First Name"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.fName}
-                                    onChangeText={fName => setUser({...user, fName: fName})}        
+                                    onChangeText={fName => setUser({ ...user, fName: fName })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     placeholder="Last Name"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.lName}
-                                    onChangeText={lName => setUser({...user, lName: lName})}        
+                                    onChangeText={lName => setUser({ ...user, lName: lName })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
-                                    placeholder="Medical Id"
-                                    placeholderTextColor="#b2b8b5"
-                                    value={user.medicalId}
-                                    onChangeText={medicalId => setUser({...user, medicalId: medicalId})}        
-                                />
-                            </Item>
-                            <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
-                                    keyboardType = 'numeric'
+                                <Input style={{ paddingLeft: "10%" }}
+                                    keyboardType='numeric'
                                     placeholder="Phone Number"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.phnNumber}
-                                    onChangeText={phnNumber => setUser({...user, phnNumber: phnNumber})}        
+                                    onChangeText={phnNumber => setUser({ ...user, phnNumber: phnNumber })}
                                 />
                             </Item>
+                            <DropDownPicker style={styles.genderDD}
+                                open={openGP}
+                                value={selectedGender}
+                                items={gender}
+                                setOpen={setOpenGP}
+                                setValue={setSelectedGender}
+                                setItems={setGender}
+                                placeholder="Gender"
+                                placeholderStyle={{
+                                    color: "#b2b8b5",
+                                    fontSize: 18
+                                }}
+                                dropDownContainerStyle={{
+                                    borderColor: "white",
+                                    fontSize: 18
+                                }}
+                                dropDownDirection="TOP"
+                            />
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
-                                    placeholder="Preferred Pharmacy"
+                                <Input style={{ paddingLeft: "10%" }}
+                                    placeholder="Date of Birth (YYYY-MM-DD)"
                                     placeholderTextColor="#b2b8b5"
-                                    value={user.pPharmacy}
-                                    onChangeText={pPharmacy => setUser({...user, pPharmacy: pPharmacy})}        
+                                    value={user.dob}
+                                    onChangeText={dob => setUser({ ...user, dob: dob })}
                                 />
                             </Item>
+                            <DropDownPicker style={styles.genderDD}
+                                open={openPPP}
+                                value={selectedPharmacy}
+                                items={pp}
+                                setOpen={setOpenPPP}
+                                setValue={setSelectedPharmacy}
+                                setItems={setPP}
+                                placeholder="Preferred Pharmacy"
+                                placeholderStyle={{
+                                    color: "#b2b8b5",
+                                    fontSize: 18
+                                }}
+                                dropDownContainerStyle={{
+                                    borderColor: "white",
+                                    fontSize: 18
+                                }}
+                            />
                             <Button
                                 rounded
                                 block
                                 style={styles.nextBtn}
-                                onPress={() => {setIsPartTwoVisible(true)}}
+                                onPress={clickNext}
                             >
                                 <Text style={styles.nextTxt}>Next</Text>
                             </Button>
-                            <Text style={styles.login}>Already have an Account? <Text style={styles.loginTxt} onPress={() => {navigation.navigate("Login")}}>Login</Text></Text>
+                            <Text style={styles.login}>Already have an Account? <Text style={styles.loginTxt} onPress={() => { navigation.navigate("Login") }}>Login</Text></Text>
                         </>
                     }
-                    {!isLoading && isPartTwoVisible &&           
+                    {!isLoading && isPartTwoVisible &&
                         <>
                             <Text style={styles.addressTxt}>Delivery Address</Text>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     placeholder="Unit"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.unit}
-                                    onChangeText={unit => setUser({...user, unit: unit})}        
+                                    onChangeText={unit => setUser({ ...user, unit: unit })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     placeholder="Street Address"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.sAddress}
-                                    onChangeText={sAddress => setUser({...user, sAddress: sAddress})}        
+                                    onChangeText={sAddress => setUser({ ...user, sAddress: sAddress })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     placeholder="Suburb"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.suburb}
-                                    onChangeText={suburb => setUser({...user, suburb: suburb})}        
+                                    onChangeText={suburb => setUser({ ...user, suburb: suburb })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     placeholder="State"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.state}
-                                    onChangeText={state => setUser({...user, state: state})}        
+                                    onChangeText={state => setUser({ ...user, state: state })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
-                                    keyboardType = 'numeric'
+                                <Input style={{ paddingLeft: "10%" }}
+                                    keyboardType='numeric'
                                     placeholder="Postcode"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.postcode}
-                                    onChangeText={postcode => setUser({...user, postcode: postcode})}        
+                                    onChangeText={postcode => setUser({ ...user, postcode: postcode })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     secureTextEntry
                                     placeholder="Password"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.password}
-                                    onChangeText={password => setUser({...user, password: password})}        
+                                    onChangeText={password => setUser({ ...user, password: password })}
                                 />
                             </Item>
                             <Item rounded style={styles.input}>
-                                <Input style={{paddingLeft: "10%"}}
+                                <Input style={{ paddingLeft: "10%" }}
                                     secureTextEntry
                                     placeholder="Confirm Password"
                                     placeholderTextColor="#b2b8b5"
                                     value={user.cPassword}
-                                    onChangeText={cPassword => setUser({...user, cPassword: cPassword})}        
+                                    onChangeText={cPassword => setUser({ ...user, cPassword: cPassword })}
                                 />
                             </Item>
                             <Button
                                 rounded
                                 block
                                 style={styles.signupBtn}
-                                onPress={async() => {await signup()}}
+                                onPress={async () => { await signup() }}
                             >
                                 <Text style={styles.nextTxt}>Sign in</Text>
                             </Button>
@@ -237,6 +385,8 @@ const styles = StyleSheet.create({
     input: {
         width: "90%",
         marginTop: "3%",
+        backgroundColor: "white",
+        borderColor: "white"
     },
     container: {
         flex: 1,
@@ -246,7 +396,7 @@ const styles = StyleSheet.create({
     nextBtn: {
         backgroundColor: "black",
         height: "8.3%",
-        marginTop: "30%",      
+        marginTop: "5%",
     },
     nextTxt: {
         letterSpacing: 0,
@@ -270,7 +420,16 @@ const styles = StyleSheet.create({
         backgroundColor: "#00CBBC",
         height: "8.3%",
         marginTop: "5%",
-    }   
+    },
+    genderDD: {
+        width: "90%",
+        marginTop: "3%",
+        backgroundColor: "white",
+        paddingLeft: "10%", 
+        borderColor: "white", 
+        borderRadius: 50,
+        marginLeft: "5%"
+    }
 })
 
 export default Signup;

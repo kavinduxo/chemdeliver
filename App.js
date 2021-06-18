@@ -22,45 +22,46 @@ export default function App() {
 
   const login = async (user) => {
     setIsLoading(true);
-    try{
-          if(user.userId != '') {
-          const existingUser = await getUser(user?.userId);
-          const decode = Base64.decode(existingUser.password)
-          if (user?.userId == existingUser.medicalId && user?.password == decode) {
-               setProfile(existingUser);
-               setIsUserLoggedIn(true);
-          }
+    try {
+      const existingUser = await getUser(user?.userId);
+      const decode = Base64.decode(existingUser.password)
+      if (user?.userId == existingUser.medicalId && user?.password == decode) {
+        setProfile(existingUser);
+        setIsUserLoggedIn(true);
+      } else {
+        throw new Error();
       }
       setIsLoading(false);
-  } catch (err) {
+    } catch (err) {
       setIsLoading(false);
+      throw err;
+    }
   }
-}
 
   const Stack = createStackNavigator();
 
   return (
     <SafeAreaProvider>
-        {!isUserLoggedIn ? (
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Login">
-                {props => <Login {...props} login={login} isLoading={isLoading} />}
-              </Stack.Screen>
-              <Stack.Screen name="Signup">
-                {props => <Signup {...props} />}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        ):(  
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="DrawerNav">
-                {props => <DrawerNav {...props} user={profile} signout={signout}/>}
-              </Stack.Screen>
-            </Stack.Navigator>
-          </NavigationContainer>
-        )}
+      {!isUserLoggedIn ? (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={"Login"} screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login">
+              {props => <Login {...props} login={login} isLoading={isLoading} />}
+            </Stack.Screen>
+            <Stack.Screen name="Signup">
+              {props => <Signup {...props} />}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      ) : (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="DrawerNav">
+              {props => <DrawerNav {...props} user={profile} signout={signout} />}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      )}
     </SafeAreaProvider>
 
   );
