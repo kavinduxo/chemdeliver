@@ -28,6 +28,7 @@ function FavouriteStoreCard({ user }) {
 
 
     useEffect(() => {
+        let unmounted = false;
         async function getData() {
             const defData = await getAllStoreCwh();
             const defData1 = await getAllStoreTwc();
@@ -43,7 +44,12 @@ function FavouriteStoreCard({ user }) {
             });
 
         }
-        getData();
+        if (!unmounted) {
+            getData();
+        }
+        return () =>{
+            unmounted = true;
+        }
     }, []);
 
     return (

@@ -1,46 +1,80 @@
-import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, SafeAreaView } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, SafeAreaView, Image } from 'react-native'
 import { Card } from 'react-native-elements'
 import FavouriteStoreCard from './FavouriteStoreCard';
-import NavHeader from './NavHeader';
 import ClosestStoreList from './ClosestStoreList';
+import { getAllStoreCwh, getAllStoreTwc } from '../services/storesService';
+
+
 
 
 const HomePage = ({ navigation, user }) => {
 
-    var mainUser = user.medicalId;
-    var mainUserPost = user.postcode;
-    const [storeId, setStoreId] = useState();
-    const [prescNo, setPrescNo] = useState();
-    const [favStore, setFavStore] = useState();
+    const [favouriteCardProps, setFavouriteCardProps] = useState({});
+    const [imgUrl, setImgUrl] = useState();
 
-    const showSimpleAlert = (alertTitle, alertMsg) => {
-        Alert.alert(alertTitle, alertMsg, [
-            { text: "OK", onPress: () => console.log("ok Pressed") },
-        ])
-    }
+    useEffect(() => {
+        let unmounted = false;
+        async function getData() {
+            const defData = await getAllStoreCwh();
+            const defData1 = await getAllStoreTwc();
+            defData.forEach(element => {
+                if (element.pharmacyID == user.preferredPharmacy) {
+                    setImgUrl('https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg');
+                    setFavouriteCardProps(element);
+                }
+            });
+            defData1.forEach(element => {
+                if (element.pharmacyID == user.preferredPharmacy) {
+                    setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
+                    setFavouriteCardProps(element);
+                }
+            });
 
-    const handleSetOrder = async () => {
-        try {
-            var currentDateTime = new Date();
-            var postCode = mainUserPost;
-            var userId = mainUser;
-            var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
-            var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
-            await createOrder(order);
-            Keyboard.dismiss();
-            setStoreId(null);
-            setPrescNo(null);
-            showSimpleAlert("Purchased Successfully!", "Order Ref: " + orderId);
-        } catch (error) {
-            console.log(error);
         }
-    }
+        if (!unmounted) {
+            getData();
+        }
+        return () =>{
+            unmounted = true;
+        }
+    }, []);
 
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScrollView style={styles.scrollView}>
-                <FavouriteStoreCard user={user} />
+                <View style={{ paddingTop: "5%" }}>
+                    <Text style={styles.sectionTitle}>
+                        Preferred Pharmacy
+                    </Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: "5%" }}>
+                    <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
+                        <View>
+                            <Image
+                                source={{
+                                    uri: imgUrl,
+                                }}
+                                style={{
+                                    height: 135,
+                                    width: 300
+                                }}
+                            />
+                        </View>
+                        <View style={{ padding: 10, width: "90%" }}>
+                            <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {favouriteCardProps.name} </Text>
+                            <Text style={{ color: "#777", paddingTop: 5 }}>
+                                {favouriteCardProps.address}
+                            </Text>
+                            <View style={{ flexDirection: 'row', }}>
+                                <Text style={{ color: "#777" }}>Contact No: {favouriteCardProps.contact_no}</Text>
+                                <Text style={{ color: "#777", paddingLeft: '25%' }}> 0.5 km</Text>
+                            </View>
+
+                        </View>
+                    </View>
+                </View>
+                {/* <FavouriteStoreCard user={user} /> */}
                 <ClosestStoreList user={user} />
             </ScrollView>
         </SafeAreaView>
@@ -96,7 +130,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
         paddingTop: '10%'
-    }
+    },
+    sectionTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingHorizontal: 30,
+        color: '#00CBBC'
+        // backgroundColor: '#00CBBC',
+    },
 });
 
 export default HomePage;
