@@ -3,10 +3,10 @@ import PrescriptionCard from './PrescriptionCard';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PrescriptionInformation from './PrescriptionInformation';
-import { SafeAreaView, FlatList, Text, View} from 'react-native'; 
+import { SafeAreaView, FlatList, Text, View, ScrollView, StyleSheet} from 'react-native'; 
 import {getList} from '../services/PrescriptionService'
 import { Spinner } from 'native-base';
-
+import { Card, Button, Icon } from 'react-native-elements'
 
 const Stack = createStackNavigator();
 
@@ -38,7 +38,6 @@ function PrescriptionList({navigation, user}){
     async function getData(){
       const data = await getList('2227715');
       setData(data)
-      console.log(data)
       setLoader(false)  
     }
     getData();
@@ -47,7 +46,7 @@ function PrescriptionList({navigation, user}){
  return (
           <SafeAreaView>
           {isLoading ? 
-            <Spinner/>
+            <Spinner color='#00CBBC'/>
                 :(
                     <>
                     {data.length === 0 ? 
@@ -60,13 +59,47 @@ function PrescriptionList({navigation, user}){
                           }}>No Prescription Available</Text>
                       </View>
                   :
-                  <FlatList
+                  <ScrollView>
+
+                    <View style={styles.container}>
+
+      <Button
+                buttonStyle={styles.button}
+                title='Sort By Date' 
+                />
+      <Button
+               buttonStyle={styles.button}
+                title='Sort By Price' 
+                />
+      <Button
+               buttonStyle={styles.button}
+                title='Sort By Med' 
+                />
+        
+    </View>
+                      <FlatList
                   data={data}
                   keyExtractor={item => item.script_id.toString()}
                   renderItem={(item) => (
                 < PrescriptionCard navigation={navigation} prescription={item}/>
               )}
-              />
+              />                  
+              <View>
+              <Button
+            buttonStyle={{
+                    width:320,
+                    marginBottom:20,
+                    marginTop: 20, 
+                    borderRadius: 20, 
+                    backgroundColor:'#00CBBC',
+                    alignSelf: 'center'
+            }}
+               title='Upload a new Prescription' 
+               onPress={() => Alert.alert('Ordered !')}
+                />
+              </View>
+              </ScrollView>        
+
                   } 
               </>
             )}
@@ -74,4 +107,20 @@ function PrescriptionList({navigation, user}){
         )
 }
 
+const styles = StyleSheet.create({
+  container: {
+    paddingTop:50,
+    paddingBottom:10,
+    paddingLeft: 10,
+    paddingRight:10,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  button: {
+    borderRadius: 20, 
+    backgroundColor:'#00CBBC',
+    width:100
+  }
+});
 export default PrescriptionList;

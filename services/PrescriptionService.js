@@ -30,3 +30,14 @@ export const getDoctor = async (doctorId) => {
   }
 }
 
+export const getPatient = async (userId) => {
+  try {
+      const response = await instancePrescription.get(`/getUser/${userId}`);
+      console.log("Success")
+      return response.data;
+  } catch (err) {
+      console.log("Error")
+      return null;
+  }
+}
+
