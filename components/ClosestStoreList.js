@@ -35,14 +35,17 @@ const ClosestStoreList = ({ user }) => {
         } else {
 
             const stores = storeData.map((store) => {
-                return (
-                    <View style={styles.items}>
-                        <Stores id={"◉ Pharmacy ID   ✑ " + store.pharmacyID}
-                            postcode={"◉ Post Code        ✑ " + store.postcode}
-                            name={"◉ " + store.name}
-                            contact={"◉ Contact No      ✑ " + store.contact_no} />
-                    </View>
-                )
+                if (store.pharmacyID != user.preferredPharmacy) {
+                    return (
+                        <View style={styles.items} key={store.pharmacyID}>
+                            <Stores id={"◉ Pharmacy ID   ✑ " + store.pharmacyID}
+                                postcode={"◉ Post Code        ✑ " + store.postcode}
+                                name={"◉ " + store.name}
+                                contact={"◉ Contact No      ✑ " + store.contact_no} />
+                        </View>
+                    )
+                }
+
             });
 
             return stores;
@@ -53,7 +56,7 @@ const ClosestStoreList = ({ user }) => {
         <ScrollView style={styles.scrollView}>
             <View style={styles.storeWrapper}>
                 <Text style={styles.sectionTitle}>
-                    Stores Close by
+                    Closest Store
                 </Text>
 
                 {stores()}
