@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard } from 'react-native'
+import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, Alert } from 'react-native'
 import { Card, ListItem, Button, Icon } from 'react-native-elements'
-import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService';
+import { getAllStoreCwh, getAllStoreTwc, getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService';
 import { updateUserStore } from '../services/ordersService';
 
 
@@ -12,7 +12,7 @@ function FavouriteStoreCard({ user }) {
     const [favouriteCardProps, setFavouriteCardProps] = useState({});
     const handleSetStore = async () => {
         try {
-            var favCard = await getStoreByIdCwh(storeId);
+            var favCard = await getStoreByIdTwc(storeId);
 
             var store = JSON.stringify({ "pPharmacy": storeId});
             setFavouriteCardProps(favCard);
@@ -29,8 +29,19 @@ function FavouriteStoreCard({ user }) {
 
     useEffect(() => {
         async function getData() {
-            const data = await getStoreByIdCwh(user.preferredPharmacy);
-            setFavouriteCardProps(data);
+            const defData = await getAllStoreCwh();
+            const defData1 = await getAllStoreTwc();
+            defData.forEach(element => {
+                if (element.pharmacyID == user.preferredPharmacy) {
+                    setFavouriteCardProps(element);
+                }
+            });
+            defData1.forEach(element => {
+                if (element.pharmacyID == user.preferredPharmacy) {
+                    setFavouriteCardProps(element);
+                }
+            });
+
         }
         getData();
     }, []);
@@ -41,7 +52,7 @@ function FavouriteStoreCard({ user }) {
                 color: '#66667E',
                 width: 300
             }}
-            >Favourite Store ID: {favouriteCardProps.pharmacyID}</Card.Title>
+            >Preferred Pharmacy: {favouriteCardProps.pharmacyID}</Card.Title>
             <Card.Divider />
             <Text style={{
                 marginBottom: 5,
