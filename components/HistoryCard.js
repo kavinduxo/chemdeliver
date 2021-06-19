@@ -14,23 +14,25 @@ export default function HistoryCard(props) {
             drugDataArr.push(drugs)
             setDrugData(drugDataArr);
         }
+        async function getReorderCount() {
+            setReorderCount(3);
+        }
         getData();
+        getReorderCount();
     }, []);
 
     const [drugData, setDrugData] = useState(null);
+    const [reorderCount, setReorderCount] = useState(0);
 
     const drugList = () => {
-        console.log(drugData)
+
         if (!drugData) {
             return <Spinner />
         } else {
-
-            const drugs = eval(drugData[0].drugs).map((drug,index) => {
-                
+            const drugs = eval(drugData[0].drugs).map((drug, i) => {
                 return (
-                    <View>
+                    <View key={i.toString()}>
                         <HistoryCardItem
-                            key={index}
                             ItemName={drug.name}
                             Quantity={drug.qty}
                         />
@@ -39,6 +41,17 @@ export default function HistoryCard(props) {
             });
             return drugs;
         };
+    }
+
+    const handleReorder = () => {
+
+        if (reorderCount >= 1) {
+            Alert.alert('Reorder Complete!')
+            setReorderCount(reorderCount - 1);
+        } else {
+            Alert.alert('Reorder Failed! \nNumber of reorders over.')
+        }
+
     }
 
     return (
@@ -54,8 +67,8 @@ export default function HistoryCard(props) {
         >
 
             <View style={{ flexDirection: "row", justifyContent: 'space-between', marginBottom: 10 }} >
-                <Text style={{ fontSize: 18, color: '#66667E' }}>Order {"CPS001"}</Text>
-                <Text style={{ fontSize: 18, color: '#66667E' }}>{props.OrderType}</Text>
+                <Text style={{ fontSize: 18, color: '#00CBBC' }}>Order {"CPS001"}</Text>
+                <Text style={{ fontSize: 18, color: '#00CBBC' }}>{props.OrderType}</Text>
             </View>
 
             <View style={{ flexDirection: "row", justifyContent: 'center', marginBottom: 5 }} >
@@ -64,15 +77,15 @@ export default function HistoryCard(props) {
 
             <View>{drugList()}</View>
 
-            <View style={{ flexDirection: "row", justifyContent: 'center', marginBottom: 10, marginTop: 10 }} >
-                <Text style={{ fontSize: 18, color: '#20D0C4' }}>Price: {"20$"}</Text>
+            <View style={{ flexDirection: "row", justifyContent: 'flex-end', marginBottom: 10, marginTop: 10 }} >
+                <Text style={{ fontSize: 18, color: '#00CBBC' }}>Price: {"20$"}</Text>
             </View>
 
             <Button
-                buttonStyle={{ borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor: '#C65D5D' }}
-                color="#C65D5D"
+                buttonStyle={{ borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor: '#00CBBC' }}
+                color="#E2EDF2"
                 title="Reorder"
-                onPress={() => Alert.alert('Reorder Complete!')}
+                onPress={() => handleReorder()}
             />
 
         </View>
