@@ -8,28 +8,38 @@ const ClosestStoreList = ({ user }) => {
 
     useEffect(() => {
         let unmounted = false;
+        let unmounted1 = false;
         async function getData() {
             const data = await getStoresByPostCodeTwc(user.postcode);
             const data1 = await getStoresByPostCodeCwh(user.postcode);
             const filteredData = [];
-            data.forEach(element => {
-                if (element.postcode == user.postcode) {
-                    filteredData.push(element);
+            if (!unmounted) {
+                data.forEach(element => {
+                    if (element.postcode == user.postcode) {
+                        filteredData.push(element);
+                    }
+                });
+                data1.forEach(element => {
+                    if (element.postcode == user.postcode) {
+                        filteredData.push(element);
+                    }
+                });
+                if (!unmounted1) {
+                    setStoreData(filteredData);
+                    return () => {
+                        unmounted1 = true;
+                    }
                 }
-            });
-            data1.forEach(element => {
-                if (element.postcode == user.postcode) {
-                    filteredData.push(element);
-                }
-            });
-            setStoreData(filteredData);
+            }
+            return () => {
+                unmounted = true;
+            }
+
         }
         if (!unmounted) {
             getData();
         }
-        return () =>{
-            unmounted = true;
-        }
+
 
     }, []);
 

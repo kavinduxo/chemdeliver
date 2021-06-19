@@ -1,15 +1,15 @@
 import React from 'react'
 import { View, Text, StyleSheet, SafeAreaView, useWindowDimensions, TouchableOpacity, Button } from 'react-native'
 
-export default function NavHeader(navigation) {
+export default function NavHeader({ navigation, title }) {
     return (
         <View style={styles.headerContainer}>
             <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.headBtn}>
-                <View >
+                {/* <View >
                     <Text style={styles.menuBtn}>𝌆</Text>
-                </View>
+                </View> */}
             </TouchableOpacity>
-            <Text style={styles.headerTitle}>CHEM Deliver</Text>
+            <Text style={styles.headerTitle}>{title}</Text>
         </View>
     )
 }
@@ -18,14 +18,14 @@ const styles = StyleSheet.create({
     headerContainer: {
         height: '8%',
         flexDirection: 'row',
-        backgroundColor: '#1E90FF',
+        backgroundColor: '#00CBBC',
     },
     headerTitle: {
         flex: 1.0,
-        paddingLeft: '27%',
+        paddingLeft: '32%',
         alignSelf: 'center',
         color: 'white',
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 'bold'
     },
     headBtn: {
