@@ -1,54 +1,88 @@
 import React, { useState } from 'react';
-import {Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import {Input, Item, Button, Spinner} from 'native-base';
+import { Text, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Input, Item, Button, Spinner, Toast, Root } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-function Login ({ login, navigation, isLoading }) {
+function Login({ login, navigation, isLoading }) {
     const [user, setUser] = useState({
         userId: '',
         password: ''
     });
 
-    return(
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <SafeAreaView style={styles.container}> 
-                <Text style={styles.loginTxt}>Login</Text>
-                <Text style={styles.loginSubtitleTxt}>Add your details to login</Text>
-                {isLoading ? 
-                        <Spinner color='#00CBBC'/>
-                : (
-                    <>
-                        <Item rounded style={styles.input}>
-                            <Input style={{textAlign: "center"}}
-                                placeholder="User Id"
-                                placeholderTextColor="#b2b8b5"
-                                value={user.userId}
-                                onChangeText={userId => setUser({...user, userId: userId})}        
-                            />
-                        </Item>
-                        <Item rounded style={styles.input}>
-                            <Input style={{textAlign: "center"}}
-                                secureTextEntry
-                                placeholder="Password"
-                                placeholderTextColor="#b2b8b5"
-                                value={user.password}
-                                onChangeText={password => setUser({...user, password: password})}        
-                            />
-                        </Item>
-                        <Button
-                            rounded
-                            block
-                            style={styles.loginBtn}
-                            onPress={async () => {await login(user)}}
-                        >
-                            <Text style={styles.login}>Login</Text>
-                        </Button>
-                        <Text style={styles.signup}>Don't have an Account? <Text style={styles.signupTxt} onPress={() => {navigation.navigate("Signup")}}>Sign Up</Text></Text>
-                    </>
-                )}
-                
-            </SafeAreaView>
-        </TouchableWithoutFeedback>
+    const validate = async () => {
+        if (user.userId != 0) {
+            try {
+                await login(user);
+            } catch (err) {
+                setUser({
+                    userId: '',
+                    password: ''
+                })
+                Toast.show({
+                    text: "Please enter valid details for login!",
+                    buttonText: "Okay",
+                    duration: 3000,
+                    type: "danger",
+                    position: "bottom"
+                });
+            }
+        } else {
+            setUser({
+                userId: '',
+                password: ''
+            })
+            Toast.show({
+                text: "Please enter a medicare id for login!",
+                buttonText: "Okay",
+                duration: 3000,
+                type: "danger",
+                position: "bottom"
+            });
+        }
+    }
+
+    return (
+        <Root>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <SafeAreaView style={styles.container}>
+                    <Text style={styles.loginTxt}>Login</Text>
+                    <Text style={styles.loginSubtitleTxt}>Add your details to login</Text>
+                    {isLoading ?
+                        <Spinner color='#00CBBC' />
+                        : (
+                            <>
+                                <Item rounded style={styles.input}>
+                                    <Input style={{ textAlign: "center" }}
+                                        placeholder="Medicare Id"
+                                        placeholderTextColor="#b2b8b5"
+                                        value={user.userId}
+                                        onChangeText={userId => setUser({ ...user, userId: userId })}
+                                    />
+                                </Item>
+                                <Item rounded style={styles.input}>
+                                    <Input style={{ textAlign: "center" }}
+                                        secureTextEntry
+                                        placeholder="Password"
+                                        placeholderTextColor="#b2b8b5"
+                                        value={user.password}
+                                        onChangeText={password => setUser({ ...user, password: password })}
+                                    />
+                                </Item>
+                                <Button
+                                    rounded
+                                    block
+                                    style={styles.loginBtn}
+                                    onPress={async () => { await validate() }}
+                                >
+                                    <Text style={styles.login}>Login</Text>
+                                </Button>
+                                <Text style={styles.signup}>Don't have an Account? <Text style={styles.signupTxt} onPress={() => { navigation.navigate("Signup") }}>Sign Up</Text></Text>
+                            </>
+                        )}
+
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
+        </Root>
     );
 }
 
@@ -94,7 +128,7 @@ const styles = StyleSheet.create({
     },
     signupTxt: {
         color: "#00CBBC",
-    }    
+    }
 })
 
 export default Login;

@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, Image } from 'react-native'
 import { Card } from 'react-native-elements'
 import FavouriteStoreCard from './FavouriteStoreCard'
 import { createOrder } from '../services/ordersService'
-import { getStoreByIdCwh, getStoreByIdTwc } from '../services/storesService'
+import { getStoreByIdCwh, getStoreByIdTwc, getAllStoreCwh, getAllStoreTwc } from '../services/storesService'
 
 
-const OrderForm = ({user}) => {
+const OrderForm = ({ user }) => {
     var mainUser = user.medicalId;
     var mainUserPost = user.postcode;
     const [storeId, setStoreId] = useState();
@@ -36,10 +36,89 @@ const OrderForm = ({user}) => {
         }
     }
 
+    const [favouriteCardProps, setFavouriteCardProps] = useState({});
+    const [imgUrl, setImgUrl] = useState();
+
+    useEffect(() => {
+        let unmounted = false;
+        let unmounted1 = false;
+        async function getData() {
+            const defData = await getAllStoreCwh();
+            const defData1 = await getAllStoreTwc();
+            if (!unmounted) {
+                defData.forEach(element => {
+                    if (element.pharmacyID == user.preferredPharmacy) {
+                        if (!unmounted1) {
+                            setImgUrl('https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg');
+                            setFavouriteCardProps(element);
+                            return () => {
+                                unmounted1 = true;
+                            }
+                        }
+                    }
+                });
+                defData1.forEach(element => {
+                    if (element.pharmacyID == user.preferredPharmacy) {
+    
+                        if (!unmounted1) {
+                            setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
+                            setFavouriteCardProps(element);
+                            return () => {
+                                unmounted1 = true;
+                            }
+                        }
+                    }
+                });
+            }
+            return () => {
+                unmounted = true;
+            }
+
+        }
+        if (!unmounted) {
+            getData();
+            return () => {
+                unmounted = true;
+            }
+        }
+
+    }, []);
+
+
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollView}>
-                <FavouriteStoreCard user={user} />
+                <View style={{ paddingTop: "3%" }}>
+                    <Text style={styles.sectionTitle}>
+                        Preferred Pharmacy
+                    </Text>
+                </View>
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: "5%" }}>
+                    <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
+                        <View>
+                            <Image
+                                source={{
+                                    uri: imgUrl,
+                                }}
+                                style={{
+                                    height: 135,
+                                    width: 300
+                                }}
+                            />
+                        </View>
+                        <View style={{ padding: 10, width: "90%" }}>
+                            <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {favouriteCardProps.name} </Text>
+                            <Text style={{ color: "#777", paddingTop: 5 }}>
+                                {favouriteCardProps.address}
+                            </Text>
+                            <View style={{ flexDirection: 'row', }}>
+                                <Text style={{ color: "#777" }}>Contact No: {favouriteCardProps.contact_no}</Text>
+                                <Text style={{ color: "#777", paddingLeft: '25%' }}> 0.5 km</Text>
+                            </View>
+
+                        </View>
+                    </View>
+                </View>
                 <Card>
                     <Card.Title style={{
                         color: '#FF7F50',
@@ -114,7 +193,13 @@ const styles = StyleSheet.create({
     },
     textOnSearch: {
         fontSize: 25
-    }
+    },
+    sectionTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        paddingHorizontal: 30,
+        color: '#00CBBC'
+    },
 });
 
 export default OrderForm;
