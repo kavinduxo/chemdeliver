@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, Image } from 'react-native'
+import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, Image, Button } from 'react-native'
 import { Card } from 'react-native-elements'
+import Dialog from "react-native-dialog";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { createOrder } from '../services/ordersService'
 import { getUserEHealth } from '../services/usersService';
@@ -18,6 +19,7 @@ const OrderForm = ({ user }) => {
     const [openPPP, setOpenPPP] = useState(false);
     const [pp, setPP] = useState([]);
     const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+    const [visible, setVisible] = useState(false);
 
 
     const showSimpleAlert = (alertTitle, alertMsg) => {
@@ -25,6 +27,19 @@ const OrderForm = ({ user }) => {
             { text: "OK", onPress: () => console.log("ok Pressed") },
         ])
     }
+
+    const showDialog = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    const handleOk = () => {
+        setSelectedPharmacy(null);
+        setVisible(false);
+    };
 
     const handleSetOrder = async () => {
         try {
@@ -110,7 +125,6 @@ const OrderForm = ({ user }) => {
             }
         })
         getDataFromMedicareId().then(data => {
-            console.log("print data - " + data)
             if (isMounted) setPP(data);
         })
         return () => { isMounted = false };
@@ -152,7 +166,14 @@ const OrderForm = ({ user }) => {
                         </View>
                     </View>
                 </View>
-                <View>
+                <View style={styles.btnStore}>
+                    <Button title="Change Pharmacy" color="#00CBBC" onPress={showDialog} />
+                </View>
+                <Dialog.Container visible={visible} headerStyle={styles.hdlgStore}>
+                    <Dialog.Title>Change Preferred Pharmacy</Dialog.Title>
+                    <Dialog.Description>
+                        Select your Preferred Pharmacy from drop down.
+                    </Dialog.Description>
                     <DropDownPicker style={styles.genderDD}
                         open={openPPP}
                         value={selectedPharmacy}
@@ -163,17 +184,75 @@ const OrderForm = ({ user }) => {
                         placeholder="Preferred Pharmacy"
                         placeholderStyle={{
                             color: "#b2b8b5",
-                            fontSize: 18
+                            fontSize: 13
                         }}
                         dropDownContainerStyle={{
                             borderColor: "white",
-                            fontSize: 18
+                            fontSize: 12
                         }}
                     />
-                </View>
+                    <Dialog.Button label="Ok" onPress={handleOk} bold={'ture'} />
+                    <Dialog.Button label="Cancel" onPress={handleCancel} />
+                </Dialog.Container>
+
                 <Card>
                     <Card.Title style={{
-                        color: '#FF7F50',
+                        color: '#00CBBC',
+                        width: '100%',
+                        fontSize: 17
+                    }}
+                    >Presciption Details</Card.Title>
+                    <Card.Divider />
+                    <View style={styles.btnPresc}>
+                        <Button title="Attach Prescription" color="#00CBBC" onPress={showDialog} />
+                    </View>
+                    <Dialog.Container visible={visible} headerStyle={styles.hdlgPresc}>
+                        <Dialog.Title>Prescription</Dialog.Title>
+                        <Dialog.Description>
+                            Select a Prescription ID.
+                        </Dialog.Description>
+                        <DropDownPicker style={styles.genderDD}
+                            open={openPPP}
+                            value={selectedPharmacy}
+                            items={pp}
+                            setOpen={setOpenPPP}
+                            setValue={setSelectedPharmacy}
+                            setItems={setPP}
+                            placeholder="Select Prescription"
+                            placeholderStyle={{
+                                color: "#b2b8b5",
+                                fontSize: 11
+                            }}
+                            dropDownContainerStyle={{
+                                borderColor: "white",
+                                fontSize: 12
+                            }}
+                        />
+                        <Dialog.Button label="Ok" onPress={handleOk} bold={'ture'} />
+                        <Dialog.Button label="Cancel" onPress={handleCancel} />
+                    </Dialog.Container>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        style={styles.inputStoreWrapper}>
+                        <TextInput style={styles.inputPresc} placeholder={'Prescription No'} value={storeId} onChangeText={text => setStoreId(text)} />
+                        {/* <TextInput style={styles.input} placeholder={'Enter Pres. No.'} value={prescNo} onChangeText={text => setPrescNo(text)} /> */}
+                    </KeyboardAvoidingView>
+                    {/* <Card.Divider /> */}
+                    <Card.Title style={{
+                        color: '#00CBBC',
+                        width: '100%',
+                        fontSize: 17
+                    }}
+                    >Medicine Details</Card.Title>
+                    <Card.Divider />
+                    <View style={styles.ordBtn}>
+
+                    </View>
+                </Card>
+
+                <Card style={styles.order}>
+                    <Card.Title style={{
+                        color: '#00CBBC',
                         width: '100%',
                         fontSize: 17
                     }}
@@ -195,8 +274,8 @@ const OrderForm = ({ user }) => {
                         </TouchableOpacity>
                     </View>
                 </Card>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
 
     )
 }
@@ -227,9 +306,20 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: '#FFF8DC',
         borderRadius: 60,
-        borderColor: '#2F4F4F',
+        borderColor: '#00CBBC',
         borderWidth: 1,
         width: '40%'
+
+    },
+    inputPresc: {
+        paddingVertical: 7,
+        paddingHorizontal: 20,
+        backgroundColor: '#FFF8DC',
+        borderRadius: 20,
+        borderColor: '#00CBBC',
+        borderWidth: 1,
+        width: '80%',
+        marginTop: '3%'
 
     },
     searchWrapper: {
@@ -239,7 +329,7 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#2F4F4F',
+        borderColor: '#00CBBC',
         borderWidth: 1,
 
     },
@@ -253,8 +343,7 @@ const styles = StyleSheet.create({
         color: '#00CBBC'
     },
     genderDD: {
-        width: "90%",
-        marginTop: "1%",
+        width: "60%",
         marginBottom: "5%",
         backgroundColor: "white",
         paddingLeft: "10%",
@@ -262,6 +351,24 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         marginLeft: "5%",
         height: 40
+    },
+    btnStore: {
+        marginTop: '5%',
+        width: "100%",
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    btnPresc: {
+        marginTop: '1%',
+        marginBottom: '2%',
+        width: "100%",
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    hdlgStore: {
+        height: '35%'
     }
 });
 
