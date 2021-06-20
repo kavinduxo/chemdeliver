@@ -8,6 +8,7 @@ import { getStoresByPostCodeCwh, getStoresByPostCodeTwc, getAllStoreCwh, getAllS
 const OtherStoreList = ({ user }) => {
 
     const [postCode, setPostCode] = useState();
+    const [storeData, setStoreData] = useState(null);
 
     const handleSearchStore = async () => {
         const data = await getStoresByPostCodeTwc(postCode);
@@ -28,48 +29,30 @@ const OtherStoreList = ({ user }) => {
         setPostCode(null);
     }
 
-    const [storeData, setStoreData] = useState(null);
-
-    useEffect(() => {
-        let unmounted = false;
-        let unmounted1 = false;
-
-        async function getData() {
-            const data = await getAllStoreCwh();
-            const data1 = await getAllStoreTwc();
-            const filteredData = [];
-            if (!unmounted) {
-                data.forEach(element => {
-                    if (element.postcode != user.postcode) {
-                        filteredData.push(element);
-                    }
-                });
-                data1.forEach(element => {
-                    if (element.postcode != user.postcode) {
-                        filteredData.push(element);
-                    }
-                });
-                if (!unmounted1) {
-                    setStoreData(filteredData);
-                    return () => {
-                        unmounted1 = true;
+    const getData = async () => {
+        const data = await getAllStoreCwh();
+        const data1 = await getAllStoreTwc();
+        const filteredData = [];
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]) {
+                    if (data[i].postcode != user.postcode) {
+                        filteredData.push(data[i]);
                     }
                 }
             }
-            return () => {
-                unmounted = true;
+        }
+        if (data1) {
+            for (let i = 0; i < data.length; i++) {
+                if (data1[i]) {
+                    if (data1[i].postcode != user.postcode) {
+                        filteredData.push(data1[i]);
+                    }
+                }
             }
-
         }
-        if (!unmounted) {
-            getData();
-        }
-        // unmounted = true;
-        return () => {
-            unmounted = true;
-        }
-
-    }, []);
+        return filteredData;
+    }
 
     const stores = () => {
 
@@ -98,6 +81,15 @@ const OtherStoreList = ({ user }) => {
             return stores;
         }
     };
+
+    useEffect(() => {
+        let isMounted = true;               // note mutable flag
+        getData().then(data => {
+            if (isMounted) setStoreData(data);    
+        })
+        return () => { isMounted = false };
+
+    }, []);
 
     return (
         <View style={styles.container}>

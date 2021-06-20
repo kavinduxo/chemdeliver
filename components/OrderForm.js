@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, Image } from 'react-native'
 import { Card } from 'react-native-elements'
-import FavouriteStoreCard from './FavouriteStoreCard'
+import DropDownPicker from 'react-native-dropdown-picker';
 import { createOrder } from '../services/ordersService'
-import { getStoreByIdCwh, getStoreByIdTwc, getAllStoreCwh, getAllStoreTwc } from '../services/storesService'
+import { getUserEHealth } from '../services/usersService';
+import { getAllStoreCwh, getAllStoreTwc, getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService'
 
 
 const OrderForm = ({ user }) => {
+
     var mainUser = user.medicalId;
     var mainUserPost = user.postcode;
     const [storeId, setStoreId] = useState();
     const [prescNo, setPrescNo] = useState();
-    const [favStore, setFavStore] = useState();
+    const [favouriteCardProps, setFavouriteCardProps] = useState({});
+    const [imgUrl, setImgUrl] = useState();
+    const [openPPP, setOpenPPP] = useState(false);
+    const [pp, setPP] = useState([]);
+    const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+
 
     const showSimpleAlert = (alertTitle, alertMsg) => {
         Alert.alert(alertTitle, alertMsg, [
@@ -36,51 +43,77 @@ const OrderForm = ({ user }) => {
         }
     }
 
-    const [favouriteCardProps, setFavouriteCardProps] = useState({});
-    const [imgUrl, setImgUrl] = useState();
+    const getDataFromMedicareId = async () => {
+        if (user.medicalId != '') {
+            const data = await getUserEHealth(user.medicalId);
+            if (data) {
+                const address = data.address.split(', ');
+
+                let storesCWH = await getStoresByPostCodeCwh(address[2]);
+                let storesTWC = await getStoresByPostCodeTwc(address[2]);
+
+                let stores = [];
+                storesCWH?.map((store) => {
+                    stores.push({
+                        label: store.name + ", " + store.address,
+                        value: store.pharmacyID
+                    })
+                });
+                storesTWC?.map((store) => {
+                    stores.push({
+                        label: store.name + ", " + store.address,
+                        value: store.pharmacyID
+                    })
+                });
+                return stores;
+            } else {
+
+                let stores = [];
+                return stores;
+            }
+        }
+    }
+
+    const getData = async () => {
+        const defData = await getAllStoreCwh();
+        const defData1 = await getAllStoreTwc();
+        if (defData) {
+            for (let i = 0; i < defData.length; i++) {
+                if (defData[i]) {
+                    if (defData[i].pharmacyID == user.preferredPharmacy) {
+                        return defData[i];
+                    }
+                }
+            }
+        }
+        if (defData1) {
+            for (let i = 0; i < defData1.length; i++) {
+                if (defData1[i]) {
+                    if (defData1[i].pharmacyID == user.preferredPharmacy) {
+                        return defData1[i];
+                    }
+                }
+            }
+        }
+    }
 
     useEffect(() => {
-        let unmounted = false;
-        let unmounted1 = false;
-        async function getData() {
-            const defData = await getAllStoreCwh();
-            const defData1 = await getAllStoreTwc();
-            if (!unmounted) {
-                defData.forEach(element => {
-                    if (element.pharmacyID == user.preferredPharmacy) {
-                        if (!unmounted1) {
-                            setImgUrl('https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg');
-                            setFavouriteCardProps(element);
-                            return () => {
-                                unmounted1 = true;
-                            }
-                        }
-                    }
-                });
-                defData1.forEach(element => {
-                    if (element.pharmacyID == user.preferredPharmacy) {
-    
-                        if (!unmounted1) {
-                            setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
-                            setFavouriteCardProps(element);
-                            return () => {
-                                unmounted1 = true;
-                            }
-                        }
-                    }
-                });
+        let isMounted = true;               // note mutable flag
+        getData().then(data => {
+            if (isMounted) {
+                setFavouriteCardProps(data);
+                if (data.pharmacyID.substring(0, 3) == 'cwh') {
+                    setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
+                } else if (data.pharmacyID.substring(0, 3) == 'twc') {
+                    setImgUrl('https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg');
+                }
             }
-            return () => {
-                unmounted = true;
-            }
-
-        }
-        if (!unmounted) {
-            getData();
-            return () => {
-                unmounted = true;
-            }
-        }
+        })
+        getDataFromMedicareId().then(data => {
+            console.log("print data - " + data)
+            if (isMounted) setPP(data);
+        })
+        return () => { isMounted = false };
 
     }, []);
 
@@ -118,6 +151,25 @@ const OrderForm = ({ user }) => {
 
                         </View>
                     </View>
+                </View>
+                <View>
+                    <DropDownPicker style={styles.genderDD}
+                        open={openPPP}
+                        value={selectedPharmacy}
+                        items={pp}
+                        setOpen={setOpenPPP}
+                        setValue={setSelectedPharmacy}
+                        setItems={setPP}
+                        placeholder="Preferred Pharmacy"
+                        placeholderStyle={{
+                            color: "#b2b8b5",
+                            fontSize: 18
+                        }}
+                        dropDownContainerStyle={{
+                            borderColor: "white",
+                            fontSize: 18
+                        }}
+                    />
                 </View>
                 <Card>
                     <Card.Title style={{
@@ -200,6 +252,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         color: '#00CBBC'
     },
+    genderDD: {
+        width: "90%",
+        marginTop: "1%",
+        marginBottom: "5%",
+        backgroundColor: "white",
+        paddingLeft: "10%",
+        borderColor: "#00CBBC",
+        borderRadius: 20,
+        marginLeft: "5%",
+        height: 40
+    }
 });
 
 export default OrderForm;

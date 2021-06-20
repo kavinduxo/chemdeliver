@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, SafeAreaView, Image } from 'react-native'
-import { Card } from 'react-native-elements'
 import DropDownPicker from 'react-native-dropdown-picker';
 import ClosestStoreList from './ClosestStoreList';
 import { getAllStoreCwh, getAllStoreTwc } from '../services/storesService';
@@ -14,47 +13,42 @@ const HomePage = ({ navigation, user }) => {
     const [favouriteCardProps, setFavouriteCardProps] = useState({});
     const [imgUrl, setImgUrl] = useState();
 
-    useEffect(() => {
-        let unmounted = false;
-        let unmounted1 = false;
-        async function getData() {
-            const defData = await getAllStoreCwh();
-            const defData1 = await getAllStoreTwc();
-            if (!unmounted) {
-                defData.forEach(element => {
-                    if (element.pharmacyID == user.preferredPharmacy) {
-                        if (!unmounted1) {
-                            setImgUrl('https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg');
-                            setFavouriteCardProps(element);
-                            return () => {
-                                unmounted1 = true;
-                            }
-                        }
+    const getData = async () => {
+        const defData = await getAllStoreCwh();
+        const defData1 = await getAllStoreTwc();
+        if (defData) {
+            for (let i = 0; i < defData.length; i++) {
+                if (defData[i]) {
+                    if (defData[i].pharmacyID == user.preferredPharmacy) {
+                        return defData[i];
                     }
-                });
-                defData1.forEach(element => {
-                    if (element.pharmacyID == user.preferredPharmacy) {
+                }
+            }
+        }
+        if (defData1) {
+            for (let i = 0; i < defData1.length; i++) {
+                if (defData1[i]) {
+                    if (defData1[i].pharmacyID == user.preferredPharmacy) {
+                        return defData1[i];
+                    }
+                }
+            }
+        }
+    }
 
-                        if (!unmounted1) {
-                            setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
-                            setFavouriteCardProps(element);
-                            return () => {
-                                unmounted1 = true;
-                            }
-                        }
-                    }
-                });
+    useEffect(() => {
+        let isMounted = true;               // note mutable flag
+        getData().then(data => {
+            if (isMounted) {
+                setFavouriteCardProps(data);    
+                if (data.pharmacyID.substring(0, 3) == 'cwh') {
+                    setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
+                } else if (data.pharmacyID.substring(0, 3) == 'twc') {
+                    setImgUrl('https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg');
+                }
             }
-            return () => {
-                unmounted = true;
-            }
-        }
-        if (!unmounted) {
-            getData();
-            return () => {
-                unmounted = true;
-            }
-        }
+        })
+        return () => { isMounted = false };
 
     }, []);
 
