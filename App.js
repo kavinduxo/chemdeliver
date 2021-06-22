@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getUser } from './services/usersService';
 import DrawerNav from './components/DrawerNav';
 import { Base64 } from 'js-base64';
+import Tabs from './components/Tabs';
 
 export default function App() {
   const [profile, setProfile] = useState(null);
@@ -55,14 +56,17 @@ export default function App() {
         </NavigationContainer>
       ) : (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
+          {/* <Stack.Navigator initialRouteName={"DrawerNav"} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="DrawerNav">
               {props => <DrawerNav {...props} user={profile} signout={signout} />}
             </Stack.Screen>
-          </Stack.Navigator>
+          </Stack.Navigator> */}
+          <Tabs user={profile} />
         </NavigationContainer>
       )}
     </SafeAreaProvider>
 
   );
 }
+
+

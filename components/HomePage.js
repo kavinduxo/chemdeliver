@@ -42,6 +42,7 @@ const HomePage = ({ navigation, user }) => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <View style={{height: "90%"}}>
             <ScrollView style={styles.scrollView}>
                 <View style={{ paddingTop: "5%" }}>
                     <Text style={styles.sectionTitle}>
@@ -77,6 +78,7 @@ const HomePage = ({ navigation, user }) => {
                 {/* <FavouriteStoreCard user={user} /> */}
                 <ClosestStoreList user={user} />
             </ScrollView>
+            </View>
         </SafeAreaView>
     )
 }
