@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, SafeAreaView, StyleSheet } from 'react-native';
 import HistoryCard from './HistoryCard';
 import { getOrders } from '../services/ordersService';
 import { Spinner } from 'native-base';
+import NavHeader from './NavHeader';
 
 export default function History({ user }) {
 
@@ -23,15 +24,13 @@ export default function History({ user }) {
     const [orderData, setOrderData] = useState(null);
 
     const orders = () => {
-        console.log(orderData)
         if (!orderData) {
             return <Spinner />
         } else {
-            const orders = orderData.map((order) => {
+            const orders = orderData.map((order, i) => {
                 return (
-                    <View style={{ marginBottom: 20 }}>
+                    <View style={{ marginBottom: 20}} key={i.toString()}>
                         <HistoryCard
-                            key={order.orderId}
                             OrderType="Delivery"
                             DateTime={order.orderDate}
                             Vendor={order.storeId}
@@ -46,17 +45,28 @@ export default function History({ user }) {
     };
 
     return (
+        <SafeAreaView style={styles.safeArea}>
+            <View style={{height: "90%"}}>
+                <NavHeader title={"History"} />
+                <ScrollView style={{
+                    flexDirection: "column",
+                    height: 90,
+                    padding: 20,
+                }}>
+                    <View style={{ height: "90%" }}>
+                        {orders()}
+                    </View>
 
-        <ScrollView style={{
-            flexDirection: "column",
-            height: 100,
-            padding: 20,
-        }}>
-
-            <View>
-                {orders()}
+                </ScrollView >
             </View>
-
-        </ScrollView >
+        </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+        paddingTop: '10%'
+    }
+});

@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Platform, Keyboard } from 'react-native';
 import { View, Text, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity, ScrollView } from 'react-native'
 import Stores from './Stores';
 import { Spinner } from 'native-base';
-import { getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService';
+import { getStoresByPostCodeCwh, getStoresByPostCodeTwc, getAllStoreCwh, getAllStoreTwc } from '../services/storesService';
 
 const OtherStoreList = ({ user }) => {
 
     const [postCode, setPostCode] = useState();
+    const [storeData, setStoreData] = useState(null);
 
     const handleSearchStore = async () => {
         const data = await getStoresByPostCodeTwc(postCode);
@@ -28,7 +29,30 @@ const OtherStoreList = ({ user }) => {
         setPostCode(null);
     }
 
-    const [storeData, setStoreData] = useState(null);
+    const getData = async () => {
+        const data = await getAllStoreCwh();
+        const data1 = await getAllStoreTwc();
+        const filteredData = [];
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]) {
+                    if (data[i].postcode != user.postcode) {
+                        filteredData.push(data[i]);
+                    }
+                }
+            }
+        }
+        if (data1) {
+            for (let i = 0; i < data.length; i++) {
+                if (data1[i]) {
+                    if (data1[i].postcode != user.postcode) {
+                        filteredData.push(data1[i]);
+                    }
+                }
+            }
+        }
+        return filteredData;
+    }
 
     const stores = () => {
 
@@ -37,12 +61,19 @@ const OtherStoreList = ({ user }) => {
         } else {
 
             const stores = storeData.map((store) => {
+                let imgUrl = '';
+                if (store.pharmacyID.substring(0, 3) == 'cwh') {
+                    imgUrl = 'https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg';
+                } else if (store.pharmacyID.substring(0, 3) == 'twc') {
+                    imgUrl = 'https://www.interiorfitouts.com.au/wp-content/uploads/2019/12/IMG_2984-HDR-scaled.jpg';
+                }
                 return (
-                    <View style={styles.items}>
-                        <Stores id={"◉ Pharmacy ID   ✑ " + store.pharmacyID}
-                            postcode={"◉ Post Code        ✑ " + store.postcode}
-                            name={"◉ " + store.name}
-                            contact={"◉ Contact No      ✑ " + store.contact_no} />
+                    <View style={styles.items} key={store.pharmacyID}>
+                        <Stores id={store.pharmacyID}
+                            address={store.address}
+                            name={store.name}
+                            contact={store.contact_no}
+                            imgUrl={imgUrl} />
                     </View>
                 )
             });
@@ -50,6 +81,15 @@ const OtherStoreList = ({ user }) => {
             return stores;
         }
     };
+
+    useEffect(() => {
+        let isMounted = true;               // note mutable flag
+        getData().then(data => {
+            if (isMounted) setStoreData(data);    
+        })
+        return () => { isMounted = false };
+
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -59,7 +99,7 @@ const OtherStoreList = ({ user }) => {
                         Other Stores
                     </Text>
 
-                     {stores()}
+                    {stores()}
 
                 </View>
             </ScrollView>
@@ -89,17 +129,19 @@ const styles = StyleSheet.create({
     storeWrapper: {
         paddingTop: 20,
         paddingHorizontal: 20,
+        paddingBottom: 30
     },
     sectionTitle: {
         fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: '#00CBBC'
     },
     items: {
         marginTop: 30,
     },
     inputStoreWrapper: {
         position: 'absolute',
-        bottom: '8%',
+        bottom: '4%',
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -108,9 +150,9 @@ const styles = StyleSheet.create({
     input: {
         paddingVertical: 15,
         paddingHorizontal: 15,
-        backgroundColor: '#FFF8DC',
-        borderRadius: 60,
-        borderColor: '#2F4F4F',
+        backgroundColor: '#e6f5f4',
+        borderRadius: 20,
+        borderColor: '#00CBBC',
         borderWidth: 2,
         width: '60%'
 
@@ -118,11 +160,11 @@ const styles = StyleSheet.create({
     searchWrapper: {
         width: 60,
         height: 60,
-        backgroundColor: '#FFF8DC',
+        backgroundColor: '#e6f5f4',
         borderRadius: 60,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: '#2F4F4F',
+        borderColor: '#00CBBC',
         borderWidth: 2,
 
     },

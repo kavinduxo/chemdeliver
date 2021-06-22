@@ -3,19 +3,19 @@ import { View, Text, StyleSheet, SafeAreaView, useWindowDimensions } from 'react
 import ClosestStoreList from './ClosestStoreList';
 import OtherStoreList from './OtherStoresList';
 import OrderForm from './OrderForm';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import NavHeader from './NavHeader';
 
-const FirstRoute = ({user}) => (
-    <OrderForm  user={user}/>
+const FirstRoute = ({ user }) => (
+    <OrderForm user={user} />
 );
 
-const SecondRoute = ({user}) => (
-    <ClosestStoreList user={user}/>
+const SecondRoute = ({ user }) => (
+    <ClosestStoreList user={user} />
 );
 
-const ThirddRoute = ({user}) => (
-    <OtherStoreList user={user}/>
+const ThirddRoute = ({ user }) => (
+    <OtherStoreList user={user} />
 );
 
 const PlaceOrderPage = ({ navigation, user }) => {
@@ -35,13 +35,26 @@ const PlaceOrderPage = ({ navigation, user }) => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <NavHeader {...navigation}/>
-            <TabView
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
-                initialLayout={{ width: layout.width }}
-            />
+            <View style={{height: "90%"}}>
+                <NavHeader title={"Place Order"}/>
+                <TabView
+                    navigationState={{ index, routes }}
+                    renderScene={renderScene}
+                    onIndexChange={setIndex}
+                    initialLayout={{ width: layout.width }}
+                    renderTabBar={props => (
+                        <TabBar
+                            {...props}
+                            renderLabel={({ route, color }) => (
+                                <Text style={{ color: 'white', margin: 8, fontWeight: 'bold' }}>
+                                    {route.title}
+                                </Text>
+                            )}
+                            style={{ backgroundColor: '#00CBBC' }}
+                        />
+                    )}
+                />
+            </View>
         </SafeAreaView>
     );
 }

@@ -34,12 +34,41 @@ const instanceByStoreTwc = axios.create({
 
 })
 
+const intanceAllStoreTwc = axios.create({
+    baseURL: apiUrlTwc,
+    timeout: 1000000,
+    headers: {Authorization: `Bearer ${accessTokeneHealth}` }
+})
+
+const intanceAllStoreCwh = axios.create({
+    baseURL: apiUrlCwh,
+    timeout: 1000000,
+    headers: {Authorization: `Bearer ${accessTokeneHealth}` }
+})
+
+export async function getAllStoreTwc() {
+    try {
+        const response = await intanceAllStoreTwc.get(`/getAll`);
+        return response.data;
+    } catch (err) {
+        return null;
+    }
+}
+
+export async function getAllStoreCwh() {
+    try {
+        const response = await intanceAllStoreCwh.get(`/getAll`);
+        return response.data;
+    } catch (err) {
+        return null;
+    }
+}
+
 export async function getStoreByIdCwh(storeId) {
     try {
         const response = await instanceByStoreCwh.get(`/getStore/${storeId}`);
         return response.data[0];
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
@@ -49,27 +78,24 @@ export async function getStoreByIdTwc(storeId) {
         const response = await instanceByStoreTwc.get('getStore/' + storeId);
         return response.data[0];
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
 
 export async function getStoresByPostCodeCwh(postCode) {
     try {
-        const response = await instanceByPostCwh.get('getStoreByPostcode/' + postCode);
+        const response = await instanceByStoreCwh.get('getStoreByPostcode/' + postCode);
         return response.data;
     } catch (err) {
-        console.log(err);
         return null;
     }
 }
 
 export async function getStoresByPostCodeTwc(postCode) {
     try {
-        const response = await instanceByPostTwc.get(`getStoreByPostcode/${postCode}`);
+        const response = await instanceByStoreTwc.get(`getStoreByPostcode/${postCode}`);
         return response.data;
     } catch (err) {
-        console.log(err);
         return null;
     }
 }

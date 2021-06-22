@@ -6,20 +6,6 @@ import {getDoctor} from '../services/PrescriptionService'
 
 
 function PrescriptionCard ({navigation, prescription}) {
-    
-    console.log(prescription.item.doctor_id);
-
-    const [data, setData] = useState('');
-  
-    useEffect(() => {
-      async function getData(){
-        const data = await getDoctor(prescription.item.doctor_id);
-        setData(data)
-      }
-      getData();
-
-    }, []);
-   
 
     const drugList = () => {
         return eval(prescription.item.drugs).map((drug) => {
@@ -29,7 +15,8 @@ function PrescriptionCard ({navigation, prescription}) {
                     alignContent: 'center',
                     color:"#153E73",
                     fontWeight: "bold", 
-                    textAlign: "left"
+                    textAlign: "left",
+                    fontSize:15,
                 }}>Name: {drug.name} - {drug.qty}</Text>
             );
         });
@@ -37,9 +24,10 @@ function PrescriptionCard ({navigation, prescription}) {
 
     return (
         <Card>
-        <Card.Title style={{color:'#66667E', width: 300}}>Script ID: {prescription.item.script_id}</Card.Title>
+        <Card.Title style={{fontSize:20, textAlign:'left', color:'#66667E', width: 300}}>Script ID: {prescription.item.script_id}</Card.Title>
         <Card.Divider/>
         <Text style={{
+            fontSize:20,
             marginBottom: 5,
             alignContent: 'center',
             color:"#153E73",
@@ -52,7 +40,7 @@ function PrescriptionCard ({navigation, prescription}) {
             alignContent: 'center',
             color:"#153E73",
             fontWeight: "bold",
-            textAlign: "center"
+            textAlign: "center",
         }}>
         </Text>  
 
@@ -73,20 +61,21 @@ function PrescriptionCard ({navigation, prescription}) {
             <Text style={{
                 marginBottom: 10,
                 color:"#153E73",
-                fontWeight: "bold",
+                fontWeight: "bold"
                 }}>
             </Text>        
                 <Icon
                     name='trash-outline'
                     type='ionicon'
                     color='#C65D5D'
+                    style={{marginBottom:20}}
                 /> 
              </View>
         </View>
                 <Button
-                buttonStyle={{borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'#C65D5D'}}
+                buttonStyle={{borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'#00CBBC'}}
                 title='Select' 
-                onPress={() => {navigation.navigate("Prescription Information",  {prescription : prescription})
+                onPress={() => {navigation.navigate("PrescriptionInformation",  {prescription : prescription})
                 }}
                 />
         </Card>
