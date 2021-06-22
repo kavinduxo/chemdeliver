@@ -61,7 +61,7 @@ export default function App() {
               {props => <DrawerNav {...props} user={profile} signout={signout} />}
             </Stack.Screen>
           </Stack.Navigator> */}
-          <Tabs user={profile} />
+          <Tabs user={profile} signout={signout} />
         </NavigationContainer>
       )}
     </SafeAreaProvider>

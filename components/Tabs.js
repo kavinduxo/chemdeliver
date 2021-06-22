@@ -41,7 +41,7 @@ const CustomOrderButton = ({ onPress }) => (
     </TouchableOpacity>
 );
 
-const Tabs = ({ user }) => {
+const Tabs = ({ user, signout }) => {
     return(
         <Tab.Navigator
             tabBarOptions={{
@@ -148,7 +148,7 @@ const Tabs = ({ user }) => {
                     ),
                 }}
             >
-                {props => <MorePage {...props} user={user} />}
+                {props => <MorePage {...props} user={user} signout={signout}/>}
             </Tab.Screen>
         </Tab.Navigator>
     )

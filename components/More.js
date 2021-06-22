@@ -6,23 +6,25 @@ import History from '../components/History';
 import { Button } from 'native-base';
 import PrescriptionList from './PrescriptionList';
 import PrescriptionInformation from './PrescriptionInformation';
+import TrackOrder from './TrackOrder';
+import Profle from './Profile';
 
 const Stack = createStackNavigator();
 
-const MorePage = ({ user, navigation }) => {
+const MorePage = ({ user, navigation, signout }) => {
     return(
         <Stack.Navigator initialRouteName={"More"} screenOptions={{ headerShown: false }}>
             <Stack.Screen name="More">
                 {props => <More {...props} user={user} />}
             </Stack.Screen>
             <Stack.Screen name="TrackMyOrder">
-                {props => <More {...props} user={user} />}
+                {props => <TrackOrder {...props}/>}
             </Stack.Screen>
             <Stack.Screen name="HistoryOrder">
                 {props => <History {...props} user={user} />}
             </Stack.Screen>
             <Stack.Screen name="DeliveryDetails">
-                {props => <More {...props} user={user} />}
+                {props => <Profle {...props} user={user} signout={signout}/>}
             </Stack.Screen>
             <Stack.Screen name="PaymentMethod">
                 {props => <More {...props} user={user} />}
