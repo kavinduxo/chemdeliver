@@ -21,14 +21,14 @@ export default function Profle({ user, signout }) {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <View style={{height: "90%"}}>
+            <View style={{ height: "90%" }}>
                 <NavHeader title={"Delivery Details"} />
                 <ScrollView style={{
                     flexDirection: "column",
                     height: 90,
                     padding: 20,
                 }}>
-                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0 }}>
                         <Image style={{ width: 100, height: 100 }} source={require('../assets/uu.png')} />
                         <Text style={{ marginTop: 20, fontSize: 25 }} onPress={signout}>Sign Out</Text>
                     </View>
@@ -58,7 +58,7 @@ export default function Profle({ user, signout }) {
                     </View>
 
                     <View style={{
-                        backgroundColor: '#F2F2F2', height: 80, marginTop: 20,
+                        backgroundColor: '#F2F2F2', height: 90, marginTop: 20,
                         marginLeft: 10, marginRight: 10, borderRadius: 100,
                     }}>
                         <Text style={{ color: '#B6B7B7', marginLeft: 40, marginTop: 10 }}>Address</Text>
@@ -66,7 +66,7 @@ export default function Profle({ user, signout }) {
                     </View>
 
                     <View style={{
-                        backgroundColor: '#F2F2F2', height: 70, marginTop: 20,
+                        backgroundColor: '#F2F2F2', height: 70, marginTop: 20, marginBottom: 30,
                         marginLeft: 10, marginRight: 10, borderRadius: 100,
                     }}>
                         <Text style={{ color: '#B6B7B7', marginLeft: 40, marginTop: 10 }}>Preferred Pharmacy</Text>
