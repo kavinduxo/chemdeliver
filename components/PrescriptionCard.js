@@ -75,7 +75,7 @@ function PrescriptionCard ({navigation, prescription}) {
                 <Button
                 buttonStyle={{borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor:'#00CBBC'}}
                 title='Select' 
-                onPress={() => {navigation.navigate("Prescription Information",  {prescription : prescription})
+                onPress={() => {navigation.navigate("PrescriptionInformation",  {prescription : prescription})
                 }}
                 />
         </Card>

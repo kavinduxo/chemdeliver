@@ -1,14 +1,9 @@
 import React from 'react'
-import { View, Text, StyleSheet, SafeAreaView, useWindowDimensions, TouchableOpacity, Button } from 'react-native'
+import { View, Text, StyleSheet} from 'react-native'
 
-export default function NavHeader({ navigation, title }) {
+export default function NavHeader({ title }) {
     return (
         <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.headBtn}>
-                {/* <View >
-                    <Text style={styles.menuBtn}>𝌆</Text>
-                </View> */}
-            </TouchableOpacity>
             <Text style={styles.headerTitle}>{title}</Text>
         </View>
     )
@@ -19,22 +14,13 @@ const styles = StyleSheet.create({
         height: '8%',
         flexDirection: 'row',
         backgroundColor: '#00CBBC',
+        alignItems: 'center',
     },
     headerTitle: {
         flex: 1.0,
-        paddingLeft: '32%',
-        alignSelf: 'center',
         color: 'white',
         fontSize: 22,
-        fontWeight: 'bold'
-    },
-    headBtn: {
-        paddingLeft: '3%',
-        alignSelf: 'center',
-        color: 'white',
-        fontWeight: 'bold'
-    },
-    menuBtn: {
-        fontSize: 30,
+        fontWeight: 'bold',
+        textAlign: 'center'
     }
 });
