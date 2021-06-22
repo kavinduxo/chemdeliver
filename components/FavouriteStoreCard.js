@@ -14,7 +14,7 @@ function FavouriteStoreCard({ user }) {
         try {
             var favCard = await getStoreByIdTwc(storeId);
 
-            var store = JSON.stringify({ "pPharmacy": storeId});
+            var store = JSON.stringify({ "pPharmacy": storeId });
             setFavouriteCardProps(favCard);
             user.preferredPharmacy = storeId
             await updateUserStore(user.medicalId, store);
@@ -29,6 +29,7 @@ function FavouriteStoreCard({ user }) {
 
     useEffect(() => {
         let unmounted = false;
+
         async function getData() {
             const defData = await getAllStoreCwh();
             const defData1 = await getAllStoreTwc();
@@ -42,14 +43,15 @@ function FavouriteStoreCard({ user }) {
                     setFavouriteCardProps(element);
                 }
             });
-
         }
         if (!unmounted) {
             getData();
-        }
-        return () =>{
             unmounted = true;
+            return () => {
+                unmounted = true;
+            }
         }
+
     }, []);
 
     return (

@@ -5,42 +5,38 @@ import { Spinner } from 'native-base';
 import { getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService';
 
 const ClosestStoreList = ({ user }) => {
-
-    useEffect(() => {
-        let unmounted = false;
-        async function getData() {
-            const data = await getStoresByPostCodeTwc(user.postcode);
-            const data1 = await getStoresByPostCodeCwh(user.postcode);
-            const filteredData = [];
-            data.forEach(element => {
-                if (element.postcode == user.postcode) {
-                    filteredData.push(element);
-                }
-            });
-            data1.forEach(element => {
-                if (element.postcode == user.postcode) {
-                    filteredData.push(element);
-                }
-            });
-            setStoreData(filteredData);
-        }
-        if (!unmounted) {
-            getData();
-        }
-        return () =>{
-            unmounted = true;
-        }
-
-    }, []);
-
+    
     const [storeData, setStoreData] = useState(null);
+    
+    const getData = async () => {
+        const data = await getStoresByPostCodeTwc(user.postcode);
+        const data1 = await getStoresByPostCodeCwh(user.postcode);
+        const filteredData = [];
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                if (data[i]) {
+                    if (data[i].postcode == user.postcode) {
+                        filteredData.push(data[i]);
+                    }
+                }
+            }
+        }
+        if (data1) {
+            for (let i = 0; i < data.length; i++) {
+                if (data1[i]) {
+                    if (data1[i].postcode == user.postcode) {
+                        filteredData.push(data1[i]);
+                    }
+                }
+            }
+        }
+        return filteredData;
+    }
 
     const stores = () => {
-
         if (!storeData) {
             return <Spinner />
         } else {
-
             const stores = storeData.map((store) => {
                 if (store.pharmacyID != user.preferredPharmacy) {
 
@@ -66,6 +62,15 @@ const ClosestStoreList = ({ user }) => {
             return stores;
         }
     };
+
+    useEffect(() => {
+        let isMounted = true;               // note mutable flag
+        getData().then(data => {
+            if (isMounted) setStoreData(data); 
+        })
+        return () => { isMounted = false };
+
+    }, []);
 
     return (
         <ScrollView style={styles.scrollView}>

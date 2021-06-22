@@ -23,15 +23,13 @@ export default function History({ user }) {
     const [orderData, setOrderData] = useState(null);
 
     const orders = () => {
-        console.log(orderData)
         if (!orderData) {
             return <Spinner />
         } else {
-            const orders = orderData.map((order) => {
+            const orders = orderData.map((order, i) => {
                 return (
-                    <View style={{ marginBottom: 20 }}>
+                    <View style={{ marginBottom: 20 }} key={i.toString()}>
                         <HistoryCard
-                            key={order.orderId}
                             OrderType="Delivery"
                             DateTime={order.orderDate}
                             Vendor={order.storeId}
