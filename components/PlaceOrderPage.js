@@ -35,24 +35,26 @@ const PlaceOrderPage = ({ navigation, user }) => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <NavHeader {...navigation} title={"Place Order"}/>
-            <TabView
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
-                initialLayout={{ width: layout.width }}
-                renderTabBar={props => (
-                    <TabBar
-                        {...props}
-                        renderLabel={({ route, color }) => (
-                            <Text style={{ color: 'white', margin: 8, fontWeight: 'bold' }}>
-                                {route.title}
-                            </Text>
-                        )}
-                        style={{ backgroundColor: '#00CBBC' }}
-                    />
-                )}
-            />
+            <View style={{height: "90%"}}>
+                <NavHeader title={"Place Order"}/>
+                <TabView
+                    navigationState={{ index, routes }}
+                    renderScene={renderScene}
+                    onIndexChange={setIndex}
+                    initialLayout={{ width: layout.width }}
+                    renderTabBar={props => (
+                        <TabBar
+                            {...props}
+                            renderLabel={({ route, color }) => (
+                                <Text style={{ color: 'white', margin: 8, fontWeight: 'bold' }}>
+                                    {route.title}
+                                </Text>
+                            )}
+                            style={{ backgroundColor: '#00CBBC' }}
+                        />
+                    )}
+                />
+            </View>
         </SafeAreaView>
     );
 }

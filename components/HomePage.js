@@ -52,7 +52,7 @@ const HomePage = ({ navigation, user }) => {
     return (
         <SafeAreaView style={styles.safeArea}>
             <View style={{height: "90%"}}>
-                <NavHeader {...navigation} title={"ChemDeliver"} />
+                <NavHeader title={"ChemDeliver"} />
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     style={styles.inputStoreWrapper}>
