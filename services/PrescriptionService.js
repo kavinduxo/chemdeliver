@@ -11,7 +11,7 @@ const instancePrescription = axios.create({
 export const getList = async (medicalId) => {
   try {
       const response = await instancePrescription.get(`/getAllRecords/${medicalId}`);
-      console.log("Success")
+      console.log("")
       return response.data;
   } catch (err) {
       console.log("Error")
@@ -34,6 +34,17 @@ export const getPatient = async (userId) => {
   try {
       const response = await instancePrescription.get(`/getUser/${userId}`);
       console.log("Success")
+      return response.data;
+  } catch (err) {
+      console.log("Error")
+      return null;
+  }
+}
+
+export const getSpecificPresc = async (scriptId) => {
+  try {
+      const response = await instancePrescription.get(`/getSpecificRecord/${scriptId}`);
+      console.log("")
       return response.data;
   } catch (err) {
       console.log("Error")

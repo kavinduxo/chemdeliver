@@ -3,9 +3,11 @@ import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleShe
 import { Card } from 'react-native-elements'
 import Dialog from "react-native-dialog";
 import DropDownPicker from 'react-native-dropdown-picker';
-import { createOrder } from '../services/ordersService'
+import MedicineCard from './MedicineCard';
+import { createOrder, updateUserStore } from '../services/ordersService'
 import { getUserEHealth } from '../services/usersService';
 import { getAllStoreCwh, getAllStoreTwc, getStoresByPostCodeCwh, getStoresByPostCodeTwc } from '../services/storesService'
+import { getList, getSpecificPresc } from '../services/PrescriptionService';
 
 
 const OrderForm = ({ user }) => {
@@ -19,26 +21,92 @@ const OrderForm = ({ user }) => {
     const [openPPP, setOpenPPP] = useState(false);
     const [pp, setPP] = useState([]);
     const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+    const [openPrP, setOpenPrP] = useState(false);
+    const [pr, setPr] = useState([]);
+    const [selectedPresc, setSelectedPresc] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [visible1, setVisible1] = useState(false);
+    const [medicines, setMedicines] = useState();
+    const [price, setPrice] = useState();
 
 
-    const showSimpleAlert = (alertTitle, alertMsg) => {
+    const showSimpleAlert = (alertTitle, alertMsg, order) => {
         Alert.alert(alertTitle, alertMsg, [
-            { text: "OK", onPress: () => console.log("ok Pressed") },
+            { text: "OK", onPress: () => console.log(order) },
         ])
     }
 
-    const showDialog = () => {
+    const showStoreDialog = () => {
         setVisible(true);
     };
 
     const handleCancel = () => {
         setVisible(false);
+        setSelectedPharmacy(null);
     };
 
-    const handleOk = () => {
+    const handleOk = async () => {
+        try {
+            const defData = await getAllStoreCwh();
+            const defData1 = await getAllStoreTwc();
+            let changedStore = {};
+            if (defData) {
+                for (let i = 0; i < defData.length; i++) {
+                    if (defData[i]) {
+                        if (defData[i].pharmacyID == selectedPharmacy) {
+                            changedStore = defData[i];
+                        }
+                    }
+                }
+            }
+            if (defData1) {
+                for (let i = 0; i < defData1.length; i++) {
+                    if (defData1[i]) {
+                        if (defData1[i].pharmacyID == selectedPharmacy) {
+                            changedStore = defData1[i];
+                        }
+                    }
+                }
+            }
+            var store = JSON.stringify({ "pPharmacy": selectedPharmacy });
+            setFavouriteCardProps(changedStore);
+            setStoreId(selectedPharmacy);
+            user.preferredPharmacy = selectedPharmacy
+            await updateUserStore(user.medicalId, store);
+
+        } catch (error) {
+            console.log(error);
+        }
         setSelectedPharmacy(null);
+        setStoreId(selectedPharmacy);
         setVisible(false);
+    };
+
+    const showPrescDialog = () => {
+        setVisible1(true);
+    }
+
+    const handlePrescCancel = () => {
+        setSelectedPresc(null);
+        setVisible1(false);
+    };
+
+    const handlePrescOk = async () => {
+        let prescNo = selectedPresc.toString();
+        setPrescNo(prescNo);
+        setVisible1(false);
+        getDrugData().then(data => {
+            setMedicines(data);
+            if (selectedPresc.toString() == '142763') {
+                setPrice('Total Price :           $7 AUD');
+            } else if (selectedPresc.toString() == '142981') {
+                setPrice('Total Price :           $15 AUD');
+            } else {
+                setPrice('Total Price :           $8 AUD');
+            }
+
+        })
+        setSelectedPresc(null);
     };
 
     const handleSetOrder = async () => {
@@ -46,13 +114,13 @@ const OrderForm = ({ user }) => {
             var currentDateTime = new Date();
             var postCode = mainUserPost;
             var userId = mainUser;
-            var orderId = userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
+            var orderId = "#" + userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
             var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
             await createOrder(order);
             Keyboard.dismiss();
-            setStoreId(null);
             setPrescNo(null);
-            showSimpleAlert("Purchased Successfully!", "Order Ref: " + orderId);
+            setMedicines(null)
+            showSimpleAlert("Purchased Successfully!", "Order Ref: " + orderId, order);
         } catch (error) {
             console.log(error);
         }
@@ -89,6 +157,26 @@ const OrderForm = ({ user }) => {
         }
     }
 
+    const getPrescData = async () => {
+        if (user.medicalId != '') {
+            const data = await getList(user.medicalId);
+            if (data) {
+                let prescriptions = [];
+                data?.map((presc) => {
+                    prescriptions.push({
+                        label: presc.script_id + "- " + presc.description,
+                        value: presc.script_id
+                    })
+                });
+                return prescriptions;
+            } else {
+
+                let prescriptions = [];
+                return prescriptions;
+            }
+        }
+    }
+
     const getData = async () => {
         const defData = await getAllStoreCwh();
         const defData1 = await getAllStoreTwc();
@@ -112,11 +200,54 @@ const OrderForm = ({ user }) => {
         }
     }
 
+    const getDrugData = async () => {
+
+        if (selectedPresc) {
+            const medData = await getSpecificPresc(selectedPresc);
+            let drugsData;
+            if (!medData) {
+                drugsData = {};
+
+            } else {
+                drugsData = JSON.parse(medData[0].drugs);
+            }
+            return drugsData;
+
+        } else {
+            let drugData = [{}];
+            return drugData;
+        }
+
+    }
+
+    const precMedicines = () => {
+        if (medicines) {
+            const precMedicines = medicines.map((drug, i) => {
+                let medTxt;
+                if (drug.name === undefined) {
+                    medTxt = 'Empty'
+                } else {
+                    medTxt = drug.name + "  frequency: " + drug.dir;
+                }
+                return (
+                    <View style={styles.medItems} key={i.toString()}>
+                        <MedicineCard text={medTxt} />
+                    </View>
+                )
+            });
+            return precMedicines;
+        }
+        else {
+            return null;
+        }
+    };
+
     useEffect(() => {
         let isMounted = true;               // note mutable flag
         getData().then(data => {
             if (isMounted) {
                 setFavouriteCardProps(data);
+                setStoreId(data.pharmacyID);
                 if (data.pharmacyID.substring(0, 3) == 'cwh') {
                     setImgUrl('https://www.franchisebusiness.com.au/app/uploads/2019/04/bigstock-Chemist-Warehouse-Australia-113332994-1920x1281.jpg');
                 } else if (data.pharmacyID.substring(0, 3) == 'twc') {
@@ -126,6 +257,15 @@ const OrderForm = ({ user }) => {
         })
         getDataFromMedicareId().then(data => {
             if (isMounted) setPP(data);
+        })
+        getPrescData().then(data => {
+            if (isMounted) setPr(data);
+        })
+        getDrugData().then(data => {
+            if (isMounted) {
+                setMedicines(null);
+                setPrice('Total Price :')
+            }
         })
         return () => { isMounted = false };
 
@@ -167,10 +307,10 @@ const OrderForm = ({ user }) => {
                     </View>
                 </View>
                 <View style={styles.btnStore}>
-                    <Button title="Change Pharmacy" color="#00CBBC" onPress={showDialog} />
+                    <Button title="Change Pharmacy" color="#00CBBC" onPress={showStoreDialog} />
                 </View>
                 <Dialog.Container visible={visible} headerStyle={styles.hdlgStore}>
-                    <Dialog.Title>Change Preferred Pharmacy</Dialog.Title>
+                    <Dialog.Title>Preferred Pharmacy</Dialog.Title>
                     <Dialog.Description>
                         Select your Preferred Pharmacy from drop down.
                     </Dialog.Description>
@@ -191,7 +331,7 @@ const OrderForm = ({ user }) => {
                             fontSize: 12
                         }}
                     />
-                    <Dialog.Button label="Ok" onPress={handleOk} bold={'ture'} />
+                    <Dialog.Button label="Ok" onPress={handleOk} />
                     <Dialog.Button label="Cancel" onPress={handleCancel} />
                 </Dialog.Container>
 
@@ -202,22 +342,22 @@ const OrderForm = ({ user }) => {
                         fontSize: 17
                     }}
                     >Presciption Details</Card.Title>
-                    <Card.Divider />
+                    {/* <Card.Divider /> */}
                     <View style={styles.btnPresc}>
-                        <Button title="Attach Prescription" color="#00CBBC" onPress={showDialog} />
+                        <Button title="Attach Prescription" color="#00CBBC" onPress={showPrescDialog} />
                     </View>
-                    <Dialog.Container visible={visible} headerStyle={styles.hdlgPresc}>
+                    <Dialog.Container visible={visible1} headerStyle={styles.hdlgPresc}>
                         <Dialog.Title>Prescription</Dialog.Title>
                         <Dialog.Description>
                             Select a Prescription ID.
                         </Dialog.Description>
                         <DropDownPicker style={styles.genderDD}
-                            open={openPPP}
-                            value={selectedPharmacy}
-                            items={pp}
-                            setOpen={setOpenPPP}
-                            setValue={setSelectedPharmacy}
-                            setItems={setPP}
+                            open={openPrP}
+                            value={selectedPresc}
+                            items={pr}
+                            setOpen={setOpenPrP}
+                            setValue={setSelectedPresc}
+                            setItems={setPr}
                             placeholder="Select Prescription"
                             placeholderStyle={{
                                 color: "#b2b8b5",
@@ -228,22 +368,26 @@ const OrderForm = ({ user }) => {
                                 fontSize: 12
                             }}
                         />
-                        <Dialog.Button label="Ok" onPress={handleOk} bold={'ture'} />
-                        <Dialog.Button label="Cancel" onPress={handleCancel} />
+                        <Dialog.Button label="Ok" onPress={handlePrescOk} />
+                        <Dialog.Button label="Cancel" onPress={handlePrescCancel} />
                     </Dialog.Container>
                     <KeyboardAvoidingView
                         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                         style={styles.inputStoreWrapper}>
-                        <TextInput style={styles.inputPresc} placeholder={'Prescription No'} value={storeId} onChangeText={text => setStoreId(text)} />
-                        {/* <TextInput style={styles.input} placeholder={'Enter Pres. No.'} value={prescNo} onChangeText={text => setPrescNo(text)} /> */}
+                        <TextInput style={styles.inputPresc} placeholder={'Prescription No'} value={prescNo} onChangeText={text => setPrescNo(text)} />
                     </KeyboardAvoidingView>
-                    {/* <Card.Divider /> */}
+                    <Card.Divider />
                     <Card.Title style={{
                         color: '#00CBBC',
                         width: '100%',
                         fontSize: 17
                     }}
+
                     >Medicine Details</Card.Title>
+                    <View style={styles.medStoreWrapper}>
+                        {precMedicines()}
+                    </View>
+
                     <Card.Divider />
                     <View style={styles.ordBtn}>
 
@@ -265,6 +409,17 @@ const OrderForm = ({ user }) => {
                         <TextInput style={styles.input} placeholder={'Enter Store ID'} value={storeId} onChangeText={text => setStoreId(text)} />
                         <TextInput style={styles.input} placeholder={'Enter Pres. No.'} value={prescNo} onChangeText={text => setPrescNo(text)} />
                     </KeyboardAvoidingView>
+                    <Card.Divider />
+                    <View style={styles.medStoreWrapper}>
+                        <Text style={{
+                            color: '#00CBBC',
+                            width: '100%',
+                            fontSize: 17,
+                            paddingLeft: '10%',
+                            paddingBottom: '5%'
+                        }}> {price}</Text>
+                    </View>
+
                     <Card.Divider />
                     <View style={styles.ordBtn}>
                         <TouchableOpacity onPress={() => handleSetOrder()}>
@@ -294,6 +449,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         marginHorizontal: 20,
+        marginVertical: 10
     },
     ordBtn: {
         position: 'relative',
@@ -369,7 +525,24 @@ const styles = StyleSheet.create({
     },
     hdlgStore: {
         height: '35%'
+    },
+    hdlgPresc: {
+        height: '35%'
+    },
+    order: {
+
+    },
+    medStoreWrapper: {
+        paddingHorizontal: 2,
+    },
+    medSectionTitle: {
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
+    medItems: {
+        marginTop: 10,
     }
+
 });
 
 export default OrderForm;
