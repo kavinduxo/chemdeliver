@@ -2,23 +2,39 @@ import React from 'react'
 import { View, Text, StyleSheet, Button } from 'react-native'
 import Counter from "react-native-counters";
 
-const MedicineCard = (props) => {
+const MedicineCard = ({medicine, addingMedicine, removingMedicine}) => {
+    
+    const showStoreDialog = (number, type) => {
+        if(type == '+') {
+            addingMedicine({
+                dir: medicine.dir,
+                name: medicine.name,
+                qty: number,
+                price: medicine.price
+            })
+        } else {
+            removingMedicine({
+                dir: medicine.dir,
+                name: medicine.name,
+                qty: number,
+                price: medicine.price
+            })
+        }
+    };
+
     return (
         <View style={styles.main}>
             <View style={styles.item}>
                 <View style={styles.itemLeft}>
-                    <Text style={styles.itemText}>{props.text}</Text>
+                    <Text style={styles.itemText}>{medicine.name} frequency: {medicine.dir}</Text>
                 </View>
             </View>
             <View style={styles.count}>
-                <Counter start={1} onChange={showStoreDialog} />
+                <Counter start={medicine.qty} onChange={showStoreDialog} max={1000}/>
             </View>
         </View>
     )
 }
-const showStoreDialog = () => {
-    console.log("")
-};
 const styles = StyleSheet.create({
     main: {
         flexDirection: 'row',

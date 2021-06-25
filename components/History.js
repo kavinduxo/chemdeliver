@@ -5,7 +5,7 @@ import { getOrders } from '../services/ordersService';
 import { Spinner } from 'native-base';
 import NavHeader from './NavHeader';
 
-export default function History({ user }) {
+export default function History({ user, addingMedicine, removingMedicine }) {
 
     useEffect(() => {
         async function getData() {
@@ -28,16 +28,22 @@ export default function History({ user }) {
             return <Spinner />
         } else {
             const orders = orderData.map((order, i) => {
-                return (
-                    <View style={{ marginBottom: 20}} key={i.toString()}>
-                        <HistoryCard
-                            OrderType="Delivery"
-                            DateTime={order.orderDate}
-                            Vendor={order.storeId}
-                            PrescriptionId={order.prescriptionId}
-                        />
-                    </View>
-                )
+                if(order.prescriptionId && order.prescriptionId != null && order.prescriptionId != 'null'){
+                    return (
+                        <View style={{ marginBottom: 20}} key={i.toString()}>
+                            <HistoryCard
+                                OrderType="Delivery"
+                                DateTime={order.orderDate}
+                                Vendor={order.storeId}
+                                PrescriptionId={order.prescriptionId}
+                                addingMedicine={addingMedicine} 
+                                removingMedicine={removingMedicine}
+                            />
+                        </View>
+                    )
+                } else {
+                    return
+                }
             });
 
             return orders;
