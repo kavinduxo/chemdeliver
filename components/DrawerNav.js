@@ -6,7 +6,7 @@ import {
     DrawerItem,
 } from '@react-navigation/drawer';
 import OtherStoreList from './OtherStoresList';
-import PlaceOrderPage from './PlaceOrderPage';
+import PlaceOrder from './PlaceOrder';
 import History from './History';
 import PrescriptionList from './PrescriptionList';
 import PrescriptionInformation from './PrescriptionInformation';
@@ -27,7 +27,7 @@ function MyDrawer({ user, signout }) {
     return (
         <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
             <Drawer.Screen name="Home">{props => <HomePage {...props} user={user} />}</Drawer.Screen>
-            <Drawer.Screen name="Place Order">{props => <PlaceOrderPage {...props} user={user} />}</Drawer.Screen>
+            <Drawer.Screen name="Place Order">{props => <PlaceOrder {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="Prescriptions">{props => <PrescriptionList {...props} user={user} />}</Drawer.Screen>
             <Drawer.Screen name="History">{props => <History {...props} user={user} />}</Drawer.Screen>
             {/* <Drawer.Screen name="Sign Out" component={() => {return signout()}} /> */}

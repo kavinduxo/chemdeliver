@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, KeyboardAvoidingView, TextInput, TouchableOpacity, StyleSheet, Platform, Keyboard, ScrollView, Alert, SafeAreaView, Image } from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import ClosestStoreList from './ClosestStoreList';
+import OtherStoreList from './OtherStoresList';
 import { getAllStoreCwh, getAllStoreTwc } from '../services/storesService';
 import NavHeader from './NavHeader';
 
@@ -9,6 +10,12 @@ const HomePage = ({ navigation, user }) => {
 
     const [favouriteCardProps, setFavouriteCardProps] = useState({});
     const [imgUrl, setImgUrl] = useState();
+    const [openDD, setOpenDD] = useState(false);
+    const [locations, setLocations] = useState([
+        { label: 'Current Location', value: 0 },
+        { label: 'Other Stores', value: 1 }
+    ]);
+    const [selectedLocation, setSelectedLocation] = useState(0);
 
     const getData = async () => {
         const defData = await getAllStoreCwh();
@@ -59,54 +66,66 @@ const HomePage = ({ navigation, user }) => {
                     <TextInput style={styles.input} placeholder={'🔍    Search Medicine..'} />
                     <Text style={styles.delStyle}>Delivering to</Text>
                     <DropDownPicker style={styles.genderDD}
+                        open={openDD}
+                        value={selectedLocation}
+                        items={locations}
+                        setOpen={setOpenDD}
+                        setValue={setSelectedLocation}
+                        setItems={setLocations}
                         placeholder="Current Location"
                         placeholderStyle={{
                             color: "#b2b8b5",
                             fontSize: 14
                         }}
-                        items={[
-                            { label: 'Item 1', value: 'item1' },
-                            { label: 'Item 2', value: 'item2' },
-                        ]}
-                        defaultIndex={0}
-                        containerStyle={{ height: 40 }}
-                        onChangeItem={item => console.log(item.label, item.value)}
+                        dropDownContainerStyle={{
+                            borderColor: "white",
+                            fontSize: 14,
+                            height: 40,
+                            width: "50%",
+                            backgroundColor: "#00CBBC",
+                        }}
                     />
                 </KeyboardAvoidingView>
-                <ScrollView style={styles.scrollView}>
-                    <View style={{ paddingTop: "3%" }}>
-                        <Text style={styles.sectionTitle}>
-                            Preferred Pharmacy
-                        </Text>
-                    </View>
-                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: "5%" }}>
-                        <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
-                            <View>
-                                <Image
-                                    source={{
-                                        uri: imgUrl,
-                                    }}
-                                    style={{
-                                        height: 135,
-                                        width: 300
-                                    }}
-                                />
-                            </View>
-                            <View style={{ padding: 10, width: "90%" }}>
-                                <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {favouriteCardProps.name} </Text>
-                                <Text style={{ color: "#777", paddingTop: 5 }}>
-                                    {favouriteCardProps.address}
-                                </Text>
-                                <View style={{ flexDirection: 'row', }}>
-                                    <Text style={{ color: "#777" }}>Contact No: {favouriteCardProps.contact_no}</Text>
-                                    <Text style={{ color: "#777", paddingLeft: '25%' }}> 0.5 km</Text>
+                {selectedLocation == 0 && 
+                <>
+                    <ScrollView style={styles.scrollView}>
+                        <View style={{ paddingTop: "3%" }}>
+                            <Text style={styles.sectionTitle}>
+                                Preferred Pharmacy
+                            </Text>
+                        </View>
+                        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingTop: "5%" }}>
+                            <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
+                                <View>
+                                    <Image
+                                        source={{
+                                            uri: imgUrl,
+                                        }}
+                                        style={{
+                                            height: 135,
+                                            width: 300
+                                        }}
+                                    />
                                 </View>
+                                <View style={{ padding: 10, width: "90%" }}>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {favouriteCardProps.name} </Text>
+                                    <Text style={{ color: "#777", paddingTop: 5 }}>
+                                        {favouriteCardProps.address}
+                                    </Text>
+                                    <View style={{ flexDirection: 'row', }}>
+                                        <Text style={{ color: "#777" }}>Contact No: {favouriteCardProps.contact_no}</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '25%' }}> 0.5 km</Text>
+                                    </View>
 
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <ClosestStoreList user={user} />
-                </ScrollView>
+                        <ClosestStoreList user={user} />
+                    </ScrollView>
+                </>}
+                {selectedLocation==1 && 
+                    <OtherStoreList user={user} />
+                }
             </View>
         </SafeAreaView>
     )
@@ -155,7 +174,6 @@ const styles = StyleSheet.create({
         borderColor: '#00CBBC',
         borderWidth: 1,
         width: '50%'
-
     },
     genderDD: {
         width: "50%",
@@ -163,7 +181,8 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderColor: "#00CBBC",
         borderRadius: 10,
-        height: 40
+        height: 40,
+        marginBottom: "8%",
     },
     delStyle: {
         paddingTop: 5,

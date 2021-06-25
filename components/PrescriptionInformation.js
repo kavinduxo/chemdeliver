@@ -26,9 +26,6 @@ function PrescriptionInformation({ route, user }) {
     }, []);
 
 
-    console.log(userData)
-
-
     const drugList = () => {
         return drugLst.map((drug) => {
             return (
