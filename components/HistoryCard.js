@@ -11,7 +11,7 @@ export default function HistoryCard(props) {
         async function getData() {
             const drugs = await getDrugs(props.PrescriptionId);
             const drugDataArr = [];
-            drugDataArr.push(drugs)
+            drugDataArr.push(drugs);
             setDrugData(drugDataArr);
         }
         async function getReorderCount() {
@@ -26,7 +26,7 @@ export default function HistoryCard(props) {
 
     const drugList = () => {
 
-        if (!drugData) {
+        if (!drugData || drugData == undefined) {
             return <Spinner />
         } else {
             const drugs = eval(drugData[0].drugs).map((drug, i) => {
@@ -44,10 +44,9 @@ export default function HistoryCard(props) {
     }
 
     const handleReorder = () => {
-
         if (reorderCount >= 1) {
-            Alert.alert('Reorder Complete!')
             setReorderCount(reorderCount - 1);
+            Alert.alert('Reorder Complete!');
         } else {
             Alert.alert('Reorder Failed! \nNumber of reorders over.')
         }
@@ -85,7 +84,7 @@ export default function HistoryCard(props) {
                 buttonStyle={{ borderRadius: 20, marginLeft: 0, marginRight: 0, marginBottom: 0, backgroundColor: '#00CBBC' }}
                 color="#E2EDF2"
                 title="Reorder"
-                onPress={() => handleReorder()}
+                onPress={() => {handleReorder()}}
             />
 
         </View>

@@ -2,10 +2,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { withTheme } from "react-native-elements";
 import HomePage from "./HomePage";
 import MorePage from "./More";
-import PlaceOrderPage from "./PlaceOrderPage";
 import MedicinesPage from "./MedicinesPage";
+import PlaceOrder from "./PlaceOrder";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
-import React from 'react';
+import React, { useState } from 'react';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,6 +43,55 @@ const CustomOrderButton = ({ onPress }) => (
 );
 
 const Tabs = ({ user, signout }) => {
+    const [meds, setMeds] = useState([]);
+
+    const addingMedicine = (medicine) => {
+        let m = [];
+        let added = false;
+        meds.map((me) =>{
+            if(me.name == medicine.name) {
+                let tem = {
+                    dir: me.dir,
+                    name: me.name,
+                    qty: medicine.qty,
+                    price: me.price
+                }
+                added = true;
+                m.push(tem);
+            } else {
+                m.push(me);
+            }
+        });
+        if(added) {
+            setMeds(m);
+        } else {
+            m.push(medicine);
+            setMeds(m);
+        } 
+    }
+
+    const removingMedicine = (medicine) => {
+        let m = [];
+        meds.map((me) =>{
+            if(me.name == medicine.name) {
+                if(medicine.qty == 0) {
+                    return;
+                } else {
+                    let tem = {
+                        dir: me.dir,
+                        name: me.name,
+                        qty: medicine.qty,
+                        price: me.price
+                    }
+                    m.push(tem);
+                }
+            } else {
+                m.push(me);
+            }
+        })
+        setMeds(m);
+    }
+
     return(
         <Tab.Navigator
             tabBarOptions={{
@@ -109,7 +158,7 @@ const Tabs = ({ user, signout }) => {
                     )
                 }}
             >
-                {props => <PlaceOrderPage {...props} user={user} />}
+                {props => <PlaceOrder {...props} user={user} meds={meds} addingMedicine={addingMedicine} removingMedicine={removingMedicine}/>}
             </Tab.Screen>
             <Tab.Screen name="B" 
                 options={{
@@ -149,7 +198,7 @@ const Tabs = ({ user, signout }) => {
                     ),
                 }}
             >
-                {props => <MorePage {...props} user={user} signout={signout}/>}
+                {props => <MorePage {...props} user={user} signout={signout} addingMedicine={addingMedicine} removingMedicine={removingMedicine}/>}
             </Tab.Screen>
         </Tab.Navigator>
     )
