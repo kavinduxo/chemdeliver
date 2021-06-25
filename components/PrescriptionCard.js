@@ -8,9 +8,9 @@ import {getDoctor} from '../services/PrescriptionService'
 function PrescriptionCard ({navigation, prescription}) {
 
     const drugList = () => {
-        return eval(prescription.item.drugs).map((drug) => {
+        return eval(prescription.item.drugs).map((drug,i) => {
             return (
-                <Text style={{
+                <Text key={i} style={{
                     marginBottom: 5,
                     alignContent: 'center',
                     color:"#153E73",
