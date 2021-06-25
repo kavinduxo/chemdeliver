@@ -2,19 +2,20 @@ import React, { useState } from 'react'
 import { View, Text, SafeAreaView, StyleSheet, Button, Alert, Image, CheckBox, Modal, TextInput } from 'react-native'
 import NavHeader from './NavHeader';
 import { Card } from 'react-native-elements'
-
-
-
+import NativeModal from 'react-native-modal';
 
 const PaymentPage = () => {
 
     const [visible, setVisible] = useState(false);
     const [isSelected, setSelection] = useState(false);
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const toggleFinishModal = () => {
+        setModalVisible(!isModalVisible);
+    };
 
     const showConfirmDialog = () => {
-        Alert.alert('Confirmation', 'You have confirmed the Card!', [
-            { text: "OK", onPress: () => console.log('') },
-        ])
+        toggleFinishModal();
     };
     const showDeleteDialog = () => {
         Alert.alert('Confirmation', 'Attempt to delete the Card!', [
@@ -164,6 +165,20 @@ const PaymentPage = () => {
                             </Card>
                         </View>
                     </Modal>
+                </View>
+            </View>
+            <View>
+                <View style={{ flex: 1 }}>
+                    <NativeModal isVisible={isModalVisible} animationIn="slideInUp">
+                        <View style={{ flex: 1, backgroundColor: '#fff', alignItems: 'center', textAlign: 'center' }}>
+                            <Image style={{ width: 200, height: 200, marginTop: 50 }} source={require('../assets/payment.png')} />
+                            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 30, marginBottom: 30 }}>Thank you for your payment!</Text>
+                            <Text style={{ marginLeft: 10, marginRight: 10, textAlign: 'center', marginBottom: 30 }}>Your order is now being processed. We will let you know once the order is picked from the outlet. Check the status of your order.</Text>
+
+                            <Button title="Track My Order" color="#00CBBC" />
+                            <Text style={{ marginTop: 20}} onPress={toggleFinishModal} >Back to Home</Text>
+                        </View>
+                    </NativeModal>
                 </View>
             </View>
         </SafeAreaView>
