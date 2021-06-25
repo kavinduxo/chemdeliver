@@ -22,13 +22,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Levothyroxine"} </Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                        25 micrograms * 28 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
@@ -47,13 +47,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Prednisone"} </Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                        1 mg * 28 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
@@ -64,7 +64,7 @@ const MedicinesPage = () => {
                             <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                                 <View>
                                     <Image
-                                        source={require('../assets/medicines/levothyroxine.jpg')}
+                                        source={require('../assets/medicines/nexium.jpg')}
                                         style={{
                                             height: 135,
                                             width: 300
@@ -72,13 +72,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> Nexium </Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                       20 mg * 7 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
@@ -89,7 +89,7 @@ const MedicinesPage = () => {
                             <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                                 <View>
                                     <Image
-                                        source={require('../assets/medicines/levothyroxine.jpg')}
+                                        source={require('../assets/medicines/synthroid.jpg')}
                                         style={{
                                             height: 135,
                                             width: 300
@@ -97,13 +97,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> Synthroid</Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                        75 micrograms * 28 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
@@ -114,7 +114,7 @@ const MedicinesPage = () => {
                             <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                                 <View>
                                     <Image
-                                        source={require('../assets/medicines/levothyroxine.jpg')}
+                                        source={require('../assets/medicines/chlorpromazine.jpg')}
                                         style={{
                                             height: 135,
                                             width: 300
@@ -122,13 +122,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> Chlorpromazine </Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                        20 micrograms * 250 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
@@ -139,7 +139,7 @@ const MedicinesPage = () => {
                             <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                                 <View>
                                     <Image
-                                        source={require('../assets/medicines/levothyroxine.jpg')}
+                                        source={require('../assets/medicines/aspirin.jpg')}
                                         style={{
                                             height: 135,
                                             width: 300
@@ -147,13 +147,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> Aspirin </Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                        5 mg * 28 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
@@ -164,7 +164,7 @@ const MedicinesPage = () => {
                             <View style={{ backgroundColor: "#eee", borderRadius: 10, overflow: "hidden" }}>
                                 <View>
                                     <Image
-                                        source={require('../assets/medicines/levothyroxine.jpg')}
+                                        source={require('../assets/medicines/ampicillin.jpg')}
                                         style={{
                                             height: 135,
                                             width: 300
@@ -172,13 +172,13 @@ const MedicinesPage = () => {
                                     />
                                 </View>
                                 <View style={{ padding: 10, width: "90%" }}>
-                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> {"Name"} </Text>
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold' }}> Ampicillin </Text>
                                     <Text style={{ color: "#777", paddingTop: 5 }}>
-                                        {"address"}
+                                        10000mg * 10 * 10 tablets
                                     </Text>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ color: "#777" }}>Contact No: {"321544"}</Text>
-                                        <Text style={{ color: "#777", paddingLeft: '20%' }}> 2.5 km</Text>
+                                        <Text style={{ color: "#777" }}>* for oral use</Text>
+                                        <Text style={{ color: "#777", paddingLeft: '40%', fontSize:40 }}> 🛒</Text>
                                     </View>
 
                                 </View>
