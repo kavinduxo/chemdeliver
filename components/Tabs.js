@@ -3,6 +3,7 @@ import { withTheme } from "react-native-elements";
 import HomePage from "./HomePage";
 import MorePage from "./More";
 import PlaceOrderPage from "./PlaceOrderPage";
+import MedicinesPage from "./MedicinesPage";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import React from 'react';
 
@@ -99,7 +100,7 @@ const Tabs = ({ user, signout }) => {
                     ),
                 }}
             >
-                {props => <HomePage {...props} user={user} />}
+                {props => <MedicinesPage {...props}/>}
             </Tab.Screen>
             <Tab.Screen name="PlaceOrder" 
                 options={{
