@@ -74,7 +74,7 @@ const PlaceOrder = ({ user, meds, addingMedicine, removingMedicine }) => {
             var postCode = mainUserPost;
             var userId = mainUser;
             var orderId = "#" + userId + currentDateTime.getFullYear() + (currentDateTime.getMonth() + 1) + currentDateTime.getDate() + currentDateTime.getHours() + currentDateTime.getMinutes() + currentDateTime.getSeconds();
-            var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": storeId, "postCode": postCode, "prescriptionId": prescNo });
+            var order = JSON.stringify({ "orderId": orderId, "userId": userId, "orderDate": currentDateTime, "storeId": user.prefferedPharmacy, "postCode": postCode, "prescriptionId": prescNo });
             await createOrder(order);
             Keyboard.dismiss();
             setPrescNo(null);

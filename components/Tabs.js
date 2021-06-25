@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { withTheme } from "react-native-elements";
 import HomePage from "./HomePage";
 import MorePage from "./More";
+import MedicinesPage from "./MedicinesPage";
 import PlaceOrder from "./PlaceOrder";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import React, { useState } from 'react';
@@ -148,7 +149,7 @@ const Tabs = ({ user, signout }) => {
                     ),
                 }}
             >
-                {props => <HomePage {...props} user={user} />}
+                {props => <MedicinesPage {...props}/>}
             </Tab.Screen>
             <Tab.Screen name="PlaceOrder" 
                 options={{
