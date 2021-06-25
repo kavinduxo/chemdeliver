@@ -4,6 +4,7 @@ import HomePage from "./HomePage";
 import MorePage from "./More";
 import MedicinesPage from "./MedicinesPage";
 import PlaceOrder from "./PlaceOrder";
+import Profile from "./Profile";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import React, { useState } from 'react';
 
@@ -26,8 +27,8 @@ const CustomOrderButton = ({ onPress }) => (
                 backgroundColor: '#00CBBC'
             }}
         >
-            <View style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
-                <Image 
+            <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                <Image
                     source={require('../assets/icons/cart-icon.png')}
                     resizeMode='contain'
                     style={{
@@ -48,8 +49,8 @@ const Tabs = ({ user, signout }) => {
     const addingMedicine = (medicine) => {
         let m = [];
         let added = false;
-        meds.map((me) =>{
-            if(me.name == medicine.name) {
+        meds.map((me) => {
+            if (me.name == medicine.name) {
                 let tem = {
                     dir: me.dir,
                     name: me.name,
@@ -62,19 +63,19 @@ const Tabs = ({ user, signout }) => {
                 m.push(me);
             }
         });
-        if(added) {
+        if (added) {
             setMeds(m);
         } else {
             m.push(medicine);
             setMeds(m);
-        } 
+        }
     }
 
     const removingMedicine = (medicine) => {
         let m = [];
-        meds.map((me) =>{
-            if(me.name == medicine.name) {
-                if(medicine.qty == 0) {
+        meds.map((me) => {
+            if (me.name == medicine.name) {
+                if (medicine.qty == 0) {
                     return;
                 } else {
                     let tem = {
@@ -92,7 +93,7 @@ const Tabs = ({ user, signout }) => {
         setMeds(m);
     }
 
-    return(
+    return (
         <Tab.Navigator
             tabBarOptions={{
                 showLabel: false,
@@ -110,12 +111,12 @@ const Tabs = ({ user, signout }) => {
                 }
             }}
         >
-            <Tab.Screen 
-                name="Home" 
+            <Tab.Screen
+                name="Home"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <View style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
-                            <Image 
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                            <Image
                                 source={require('../assets/icons/home-icon.png')}
                                 resizeMode='contain'
                                 style={{
@@ -131,11 +132,11 @@ const Tabs = ({ user, signout }) => {
             >
                 {props => <HomePage {...props} user={user} />}
             </Tab.Screen>
-            <Tab.Screen name="A" 
+            <Tab.Screen name="Medicine"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <View style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
-                            <Image 
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                            <Image
                                 source={require('../assets/icons/b.png')}
                                 resizeMode='contain'
                                 style={{
@@ -149,22 +150,22 @@ const Tabs = ({ user, signout }) => {
                     ),
                 }}
             >
-                {props => <MedicinesPage {...props}/>}
+                {props => <MedicinesPage {...props} />}
             </Tab.Screen>
-            <Tab.Screen name="PlaceOrder" 
+            <Tab.Screen name="PlaceOrder"
                 options={{
                     tabBarButton: (props) => (
                         <CustomOrderButton {...props} />
                     )
                 }}
             >
-                {props => <PlaceOrder {...props} user={user} meds={meds} addingMedicine={addingMedicine} removingMedicine={removingMedicine}/>}
+                {props => <PlaceOrder {...props} user={user} meds={meds} addingMedicine={addingMedicine} removingMedicine={removingMedicine} />}
             </Tab.Screen>
-            <Tab.Screen name="B" 
+            <Tab.Screen name="Profile"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <View style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
-                            <Image 
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                            <Image
                                 source={require('../assets/icons/c.png')}
                                 resizeMode='contain'
                                 style={{
@@ -178,13 +179,13 @@ const Tabs = ({ user, signout }) => {
                     ),
                 }}
             >
-                {props => <HomePage {...props} user={user} />}
+                {props => <Profile {...props} user={user} signout={signout} />}
             </Tab.Screen>
-            <Tab.Screen name="More" 
+            <Tab.Screen name="More"
                 options={{
-                    tabBarIcon: ({focused}) => (
-                        <View style={{alignItems: 'center', justifyContent: 'center', top: 10}}>
-                            <Image 
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                            <Image
                                 source={require('../assets/icons/d.png')}
                                 resizeMode='contain'
                                 style={{
@@ -198,7 +199,7 @@ const Tabs = ({ user, signout }) => {
                     ),
                 }}
             >
-                {props => <MorePage {...props} user={user} signout={signout} addingMedicine={addingMedicine} removingMedicine={removingMedicine}/>}
+                {props => <MorePage {...props} user={user} signout={signout} addingMedicine={addingMedicine} removingMedicine={removingMedicine} />}
             </Tab.Screen>
         </Tab.Navigator>
     )

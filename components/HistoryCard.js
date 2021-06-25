@@ -29,17 +29,22 @@ export default function HistoryCard(props) {
         if (!drugData || drugData == undefined) {
             return <Spinner />
         } else {
-            const drugs = eval(drugData[0].drugs).map((drug, i) => {
-                return (
-                    <View key={i.toString()}>
-                        <HistoryCardItem
-                            ItemName={drug.name}
-                            Quantity={drug.qty}
-                        />
-                    </View>
-                )
-            });
-            return drugs;
+            if (drugData[0] != undefined) {
+                const drugs = eval(drugData[0].drugs).map((drug, i) => {
+                    return (
+                        <View key={i.toString()}>
+                            <HistoryCardItem
+                                ItemName={drug.name}
+                                Quantity={drug.qty}
+                            />
+                        </View>
+                    )
+                });
+                return drugs;
+            } else {
+                return <Spinner />
+            }
+
         };
     }
 
@@ -48,7 +53,9 @@ export default function HistoryCard(props) {
             setReorderCount(reorderCount - 1);
             Alert.alert('Reorder Complete!');
         } else {
-            Alert.alert('Reorder Failed! \nNumber of reorders over.')
+            Alert.alert('Reorder Failed!', 'Number of reorders over.', [
+                { text: "OK", onPress: () => console.log('') },
+            ]);
         }
 
     }

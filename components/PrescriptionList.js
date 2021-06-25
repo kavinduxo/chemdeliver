@@ -44,6 +44,16 @@ function PrescriptionList({ navigation, user }) {
     getData();
   }, []);
 
+  // const list = () => {
+  //   const l = orderData.map((data, i) => {
+  //     return (
+  //       < PrescriptionCard key={i} navigation={navigation} prescription={data} />
+  //     )
+  //   });
+
+  //   return l;
+  // }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       {isLoading ?
@@ -60,7 +70,7 @@ function PrescriptionList({ navigation, user }) {
                 }}>No Prescription Available</Text>
               </View>
               :
-              <View style={{height: "90%"}}>
+              <View style={{ height: "90%" }}>
                 <NavHeader title={"Manage Prescription"} />
                 <ScrollView>
 
@@ -125,9 +135,9 @@ const styles = StyleSheet.create({
     width: 100
   },
   safeArea: {
-      flex: 1,
-      backgroundColor: '#FFFFFF',
-      paddingTop: '10%'
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingTop: '10%'
   }
 });
 export default PrescriptionList;
