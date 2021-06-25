@@ -7,6 +7,7 @@ import { Button } from 'native-base';
 import PrescriptionList from './PrescriptionList';
 import PrescriptionInformation from './PrescriptionInformation';
 import TrackOrder from './TrackOrder';
+import PaymentPage from './PaymentPage';
 import Profle from './Profile';
 
 const Stack = createStackNavigator();
@@ -27,7 +28,7 @@ const MorePage = ({ user, navigation, signout, addingMedicine, removingMedicine 
                 {props => <Profle {...props} user={user} signout={signout}/>}
             </Stack.Screen>
             <Stack.Screen name="PaymentMethod">
-                {props => <More {...props} user={user} />}
+                {props => <PaymentPage {...props} />}
             </Stack.Screen>
             <Stack.Screen name="ManagePrescription">
                 {props => <PrescriptionList {...props} user={user} />}
