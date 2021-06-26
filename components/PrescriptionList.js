@@ -37,7 +37,7 @@ function PrescriptionList({ navigation, user }) {
 
   useEffect(() => {
     async function getData() {
-      const data = await getList('2227715');
+      const data = await getList(user.medicalId);
       setData(data)
       setLoader(false)
     }
