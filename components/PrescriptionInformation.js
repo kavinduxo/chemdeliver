@@ -27,9 +27,9 @@ function PrescriptionInformation({ route, user }) {
 
 
     const drugList = () => {
-        return drugLst.map((drug) => {
+        return drugLst.map((drug, i) => {
             return (
-                <View style={{ width: 350 }}>
+                <View style={{ width: 350 }} key={i} >
                     <Card style={{
                     }}>
                         <View style={{

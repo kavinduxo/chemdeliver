@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Signup from './components/Signup';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { getUser } from './services/usersService';
-import DrawerNav from './components/DrawerNav';
 import { Base64 } from 'js-base64';
 import Tabs from './components/Tabs';
 

@@ -4,7 +4,6 @@ import HomePage from "./HomePage";
 import MorePage from "./More";
 import MedicinesPage from "./MedicinesPage";
 import PlaceOrder from "./PlaceOrder";
-import Profile from "./Profile";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import React, { useState } from 'react';
 
@@ -161,32 +160,12 @@ const Tabs = ({ user, signout }) => {
             >
                 {props => <PlaceOrder {...props} user={user} meds={meds} addingMedicine={addingMedicine} removingMedicine={removingMedicine} />}
             </Tab.Screen>
-            <Tab.Screen name="Profile"
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
-                            <Image
-                                source={require('../assets/icons/c.png')}
-                                resizeMode='contain'
-                                style={{
-                                    width: 20,
-                                    height: 20,
-                                    tintColor: focused ? "#00CBBC" : "#7C7D7E",
-                                    marginBottom: "30%"
-                                }}
-                            />
-                        </View>
-                    ),
-                }}
-            >
-                {props => <Profile {...props} user={user} signout={signout} />}
-            </Tab.Screen>
             <Tab.Screen name="More"
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
                             <Image
-                                source={require('../assets/icons/d.png')}
+                                source={require('../assets/icons/hamburg.png')}
                                 resizeMode='contain'
                                 style={{
                                     width: 20,
@@ -200,6 +179,27 @@ const Tabs = ({ user, signout }) => {
                 }}
             >
                 {props => <MorePage {...props} user={user} signout={signout} addingMedicine={addingMedicine} removingMedicine={removingMedicine} />}
+            </Tab.Screen>
+            <Tab.Screen name="SignOut"
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', top: 10 }}>
+                            <Image
+                                source={require('../assets/icons/sign-out.png')}
+                                resizeMode='contain'
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    tintColor: focused ? "#00CBBC" : "#7C7D7E",
+                                    marginBottom: "30%"
+                                }}
+                            />
+                        </View>
+                    ),
+                    tabBarButton: (props) => (<TouchableOpacity  {...props} onPress={()=>signout()}/>)
+                }}
+            >
+                {props => <View />}
             </Tab.Screen>
         </Tab.Navigator>
     )
