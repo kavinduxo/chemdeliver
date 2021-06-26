@@ -72,51 +72,52 @@ function PrescriptionList({ navigation, user }) {
               :
               <View style={{ height: "90%" }}>
                 <NavHeader title={"Manage Prescription"} />
-                <ScrollView>
 
-                  <View style={styles.container}>
+                <FlatList
+                  LisHeaderComponent={
+                    <View style={styles.container}>
+                      <Button
+                        buttonStyle={styles.button}
+                        title='Sort By Date'
+                      />
+                      <Button
+                        buttonStyle={styles.button}
+                        title='Sort By Price'
+                      />
+                      <Button
+                        buttonStyle={styles.button}
+                        title='Sort By Med'
+                      />
+                    </View>}
 
-                    <Button
-                      buttonStyle={styles.button}
-                      title='Sort By Date'
-                    />
-                    <Button
-                      buttonStyle={styles.button}
-                      title='Sort By Price'
-                    />
-                    <Button
-                      buttonStyle={styles.button}
-                      title='Sort By Med'
-                    />
+                  data={data}
+                  keyExtractor={item => item.script_id.toString()}
+                  renderItem={(item) => (
+                    < PrescriptionCard navigation={navigation} prescription={item} />
+                  )}
 
-                  </View>
-                  <FlatList
-                    data={data}
-                    keyExtractor={item => item.script_id.toString()}
-                    renderItem={(item) => (
-                      < PrescriptionCard navigation={navigation} prescription={item} />
-                    )}
-                  />
-                  <View>
-                    <Button
-                      buttonStyle={{
-                        width: 320,
-                        marginBottom: 20,
-                        marginTop: 20,
-                        borderRadius: 20,
-                        backgroundColor: '#00CBBC',
-                        alignSelf: 'center'
-                      }}
-                      title='Upload a new Prescription'
-                      onPress={() => Alert.alert('Ordered !')}
-                    />
-                  </View>
-                </ScrollView>
+                  ListFooterComponent={
+                    <View>
+                      <Button
+                        buttonStyle={{
+                          width: 320,
+                          marginBottom: 20,
+                          marginTop: 20,
+                          borderRadius: 20,
+                          backgroundColor: '#00CBBC',
+                          alignSelf: 'center'
+                        }}
+                        title='Upload a new Prescription'
+                        onPress={() => Alert.alert('Ordered !')}
+                      />
+                    </View>
+                  } />
               </View>
             }
           </>
-        )}
-    </SafeAreaView>
+        )
+      }
+    </SafeAreaView >
   )
 }
 
