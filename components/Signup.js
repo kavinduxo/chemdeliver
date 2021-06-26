@@ -82,14 +82,8 @@ function Signup({ navigation }) {
                     dob: user.dob
                 }
                 if (await createUser(updatedUser)) {
-                    Toast.show({
-                        text: "User Created!",
-                        buttonText: "Okay",
-                        duration: 3000,
-                        type: "success",
-                        position: "bottom"
-                    })
                     setIsLoading(false);
+                    navigation.navigate("Login");
                 } else {
                     Toast.show({
                         text: "There was an error while creating a user! Please try again",
@@ -100,7 +94,6 @@ function Signup({ navigation }) {
                     })
                     setIsLoading(false);
                 }
-                navigation.navigate("Login");
             } else {
                 Toast.show({
                     text: "Please enter all fields to proceed!",
@@ -275,6 +268,7 @@ function Signup({ navigation }) {
                                     borderColor: "white",
                                     fontSize: 18
                                 }}
+                                dropDownDirection="TOP"
                             />
                             <Button
                                 rounded
@@ -355,7 +349,7 @@ function Signup({ navigation }) {
                                 style={styles.signupBtn}
                                 onPress={async () => { await signup() }}
                             >
-                                <Text style={styles.nextTxt}>Sign in</Text>
+                                <Text style={styles.nextTxt}>Sign up</Text>
                             </Button>
                         </>
                     }
