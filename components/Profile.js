@@ -30,7 +30,6 @@ export default function Profle({ user, signout }) {
                 }}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0 }}>
                         <Image style={{ width: 100, height: 100 }} source={require('../assets/uu.png')} />
-                        <Text style={{ marginTop: 20, fontSize: 25 }} onPress={signout}>Sign Out</Text>
                     </View>
 
                     <View style={{
